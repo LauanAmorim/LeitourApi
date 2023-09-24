@@ -4,24 +4,24 @@ using LeitourApi.Models;
 
 namespace LeitourApi.Repository
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private readonly LeitourContext context;
-        public IWeatherRepository WeatherRepository {get;}
-
-        public UnitOfWork(LeitourContext context, IWeatherRepository WeatherRepository)
-        {
-            this.context = context;
-            this.WeatherRepository = WeatherRepository;
+        private readonly LeitourContext _context;
+        public IWeatherRepository Weather {get; private set;}
+    
+        public UnitOfWork(LeitourContext context){
+            _context = context;
+            Weather = new WeatherRepository(context);
         }
-
-        IWeatherRepository IUnitOfWork.WeatherRepository => throw new NotImplementedException();
-
-        public int Complete() => context.SaveChanges();
 
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public int Complete()
+        {
+            return _context.SaveChanges();
         }
     }
 }

@@ -1,8 +1,9 @@
 namespace LeitourApi.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
-        IWeatherRepository WeatherRepository {get;}
+        IWeatherRepository Weather {get;}
+
         int Complete();
     }
 }

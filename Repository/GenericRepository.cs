@@ -6,23 +6,27 @@ using LeitourApi.Models;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using LeitourApi.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace LeitourApi.Repository
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        internal LeitourContext context;
-        internal DbSet<TEntity> dbSet;
+        internal readonly LeitourContext context;
+        internal DbSet<TEntity> DbSet;
 
         public GenericRepository(LeitourContext context)
         {
             this.context = context;
-            this.dbSet = context.Set<TEntity>();
+            DbSet = context.Set<TEntity>();
         }
 
         // Implements General Methods
 
-        public Task<List<TEntity>> GetAll() => dbSet.ToListAsync();
+        public Task<List<TEntity>> GetAll() => DbSet.ToListAsync();
+
+        public string Debug(string value) => "Valor: " + value;
 
         public Task<List<TEntity>> GetByAll(int id)
         {

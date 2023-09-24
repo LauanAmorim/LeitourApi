@@ -6,6 +6,8 @@ namespace LeitourApi.Interfaces
         Task<List<TEntity>> GetByAll(int id);
         Task<List<TEntity>> GetAll();
 
+        string Debug(string value);
+
         // Implements methods here
     }
 }

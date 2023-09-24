@@ -3,9 +3,9 @@ using LeitourApi.Repository;
 
 namespace LeitourApi.Interfaces
 {
-    public interface IWeatherRepository: IGenericRepository<WeatherForecast>
+    public interface IWeatherRepository : IGenericRepository<WeatherForecast>
     {
-        new Task<List<WeatherForecast>> GetAll();
+        Task<List<WeatherForecast>> GetWeatherAll();
 
         // Implements methods here
     }

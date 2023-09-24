@@ -4,12 +4,12 @@ namespace LeitourApi.Models
 {
     public class LeitourContext : DbContext
     {
+
         public LeitourContext(DbContextOptions options) : base(options)
         {
-
         }
 
-        public DbSet<WeatherForecast> WeatherForecasts => Set<WeatherForecast>();
+        public DbSet<WeatherForecast> Weather {get; set;}
         
     } 
 }

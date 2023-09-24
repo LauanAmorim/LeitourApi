@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace LeitourApi.Models;
 
 public class WeatherForecast
 {
+    [Key]
+    public int id; 
     public DateOnly Date { get; set; }
 
     public int TemperatureC { get; set; }

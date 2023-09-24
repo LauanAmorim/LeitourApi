@@ -1,6 +1,8 @@
 using LeitourApi.Interfaces;
 using LeitourApi.Models;
 using LeitourApi.Repository;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,14 +14,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
-/*
+string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<LeitourContext>(options =>
-    options.UseMySqlServer(builder.Configuration.GetConnectionString("connection"))
+    options.UseMySql(connection,ServerVersion.AutoDetect(connection))
     // Connection String is missing from configuration;
-);*/
+);
 
 
 var app = builder.Build();
