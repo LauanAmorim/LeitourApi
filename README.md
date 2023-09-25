@@ -11,5 +11,8 @@ Tutorial de MVC Repository + Unit of Work</a><br>
 Tutorial Passo a Passo Geral</a><br>
 <a href="https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application#implement-a-generic-repository-and-a-unit-of-work-class">
 Seção sobre GenericRepository</a><br>
+<a href="https://www.entityframeworktutorial.net/efcore/working-with-stored-procedure-in-ef-core.aspx">
+Stored Procedure e EntityFramework</a><br>
 <a href="https://learn.microsoft.com/pt-br/aspnet/core/host-and-deploy/?view=aspnetcore-7.0">
 Deploy de Api</a><br>
+
