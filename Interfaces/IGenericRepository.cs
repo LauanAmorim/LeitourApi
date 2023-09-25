@@ -1,13 +1,18 @@
+using System.Linq.Expressions;
+
 namespace LeitourApi.Interfaces
 {
-    public interface IGenericRepository<TEntity> where TEntity : class
+    public interface IGenericRepository<T> where T : class
     {
-        Task<TEntity> GetById(int id);
-        Task<List<TEntity>> GetByAll(int id);
-        Task<List<TEntity>> GetAll();
+        Task<T> GetById(int id);
+        Task<List<T>> GetAll();
+        Task<T> FindByCondition(Expression<Func<T, bool>> predicate);
+        Task<List<T>> FindByConditionList(Expression<Func<T, bool>> predicate);
+
+        Task Add(T entity);
+        Task Update(T entity);
+        Task Delete(T entity);
 
         string Debug(string value);
-
-        // Implements methods here
     }
 }

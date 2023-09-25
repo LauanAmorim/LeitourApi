@@ -8,34 +8,44 @@ using Microsoft.EntityFrameworkCore;
 using LeitourApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace LeitourApi.Repository
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         internal readonly LeitourContext context;
-        internal DbSet<TEntity> DbSet;
+        internal DbSet<T> DbSet;
 
         public GenericRepository(LeitourContext context)
         {
             this.context = context;
-            DbSet = context.Set<TEntity>();
+            DbSet = context.Set<T>();
         }
 
-        // Implements General Methods
+        public async Task<T> GetById(int id) => await DbSet.FindAsync(id);
+        public async Task<List<T>> GetAll() => await DbSet.ToListAsync();
 
-        public Task<List<TEntity>> GetAll() => DbSet.ToListAsync();
+        public async Task<T> FindByCondition(Expression<Func<T, bool>> predicate) =>
+            await DbSet.FirstOrDefaultAsync(predicate);
+        
+        public async Task<List<T>> FindByConditionList(Expression<Func<T, bool>> predicate) =>
+            await DbSet.Where(predicate).ToListAsync();
+
+        // Observação, talvez esses métodos abaixo não precisem do SaveChangesAsync.
+        public async Task Add(T entity){
+            await DbSet.AddAsync(entity);
+            await context.SaveChangesAsync();
+        }
+        public async Task Update(T entity){ 
+            context.Entry(entity).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+        }
+        public async Task Delete(T entity){
+            DbSet.Remove(entity);
+            await context.SaveChangesAsync();
+        }
 
         public string Debug(string value) => "Valor: " + value;
-
-        public Task<List<TEntity>> GetByAll(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TEntity> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

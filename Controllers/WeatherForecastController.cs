@@ -21,7 +21,7 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet("Debug/{teste}")]
-    public async Task<ActionResult<string>> Debug(string teste)
+    public ActionResult<string> Debug(string teste)
     {
         return unitOfWork.Weather.Debug(teste);
     }
