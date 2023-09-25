@@ -19,7 +19,6 @@ builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<LeitourContext>(options =>
     options.UseMySql(connection,ServerVersion.AutoDetect(connection))
-    // Connection String is missing from configuration;
 );
 
 

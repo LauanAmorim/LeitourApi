@@ -8,7 +8,7 @@ namespace LeitourApi.Models
         {
         }
 
-        public DbSet<WeatherForecast> Weather {get; set;}
-        
+        public DbSet<User> User {get; set;}
+        // public DbSet<Post> Post {get; set;}
     } 
 }

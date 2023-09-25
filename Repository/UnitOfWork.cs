@@ -7,11 +7,11 @@ namespace LeitourApi.Repository
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly LeitourContext _context;
-        public IWeatherRepository Weather {get; private set;}
+        public IUserRepository User {get; private set;}
     
         public UnitOfWork(LeitourContext context){
             _context = context;
-            Weather = new WeatherRepository(context);
+            User = new UserRepository(context);
         }
 
         public void Dispose()

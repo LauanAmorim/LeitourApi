@@ -9,16 +9,15 @@ using LeitourApi.Interfaces;
 
 namespace LeitourApi.Repository
 {
-    public class WeatherRepository: GenericRepository<WeatherForecast>, IWeatherRepository
+    public class UserRepository: GenericRepository<User>, IUserRepository
     {        
    
-        public WeatherRepository(LeitourContext context) : base(context)
+        public UserRepository(LeitourContext context) : base(context)
         {
-    
         }
+
         // Implements General Methods
-        public Task<List<WeatherForecast>> GetWeatherAll(){
-            return context.Set<WeatherForecast>().ToListAsync();
-        }
+        public Task<List<User>> GetAllUsers() => context.Set<User>().GetAll().ToListAsync();
+        
     }
 }
