@@ -6,22 +6,30 @@ namespace LeitourApi.Repository
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private readonly LeitourContext _context;
-        public IUserRepository User {get; private set;}
-    
-        public UnitOfWork(LeitourContext context){
-            _context = context;
-            User = new UserRepository(context);
+        private readonly LeitourContext context;
+        public IUserRepository User {get;}
+
+        public UnitOfWork(LeitourContext context, IUserRepository userRepository){
+            this.context = context;
+            User = userRepository;
+        }
+
+        public int Complete() => context.SaveChanges();
+        
+
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+                if (disposing)
+                    context.Dispose();
+            disposed = true;
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
-        }
-
-        public int Complete()
-        {
-            return _context.SaveChanges();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

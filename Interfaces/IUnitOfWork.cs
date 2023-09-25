@@ -2,7 +2,7 @@ namespace LeitourApi.Interfaces
 {
     public interface IUnitOfWork
     {
-        IWeatherRepository Weather {get;}
+        IUserRepository User {get;}
 
         int Complete();
     }

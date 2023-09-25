@@ -24,8 +24,8 @@ public class User
     public required string Password { get; set; } = null!;
 
     [Column("ProfilePhoto",TypeName = "varchar(100)")]
-    [Required]
-    public required string ProfilePhoto { get; set; } = null!;
+  //  [Required]
+    public string? ProfilePhoto { get; set; }
 
     public ICollection<Post> Posts { get; } = new List<Post>();
 }

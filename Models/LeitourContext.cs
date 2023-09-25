@@ -8,7 +8,12 @@ namespace LeitourApi.Models
         {
         }
 
-        public DbSet<User> User {get; set;}
+        public DbSet<User> User => Set<User>();
         // public DbSet<Post> Post {get; set;}
-    } 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
+    }
 }

@@ -6,6 +6,8 @@ namespace LeitourApi.Interfaces
     {
         Task<T> GetById(int id);
         Task<List<T>> GetAll();
+
+        //Task<List<T>> GetAllById(int id);
         Task<T> FindByCondition(Expression<Func<T, bool>> predicate);
         Task<List<T>> FindByConditionList(Expression<Func<T, bool>> predicate);
 

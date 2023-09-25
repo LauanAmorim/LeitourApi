@@ -19,4 +19,10 @@ public class UserController : ControllerBase
         List<User> users = await unitOfWork.User.GetAll();
         return users;
     }
+    [HttpGet("{id}")]
+    public async Task<ActionResult<User>> GetUser(int id)
+    {
+        User user = await unitOfWork.User.GetById(id);
+        return user;
+    }
 }
