@@ -3,29 +3,29 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LeitourApi.Models;
 
-[Table("tbUser")]
+[Table("tbUsuario")]
 public class User
 {
     [Key]
-    [Column("UserId",TypeName = "int")]
+    [Column("Id",TypeName = "int")]
     [Required]
-    public int UserId { get; set; }
+    public int Id { get; set; }
 
-    [Column("NameUser",TypeName = "varchar(20)")]
+    [Column("Nome",TypeName = "varchar(30)")]
     [Required]
-    public string NameUser { get; set;}
+    public required string NameUser { get; set;}
 
-    [Column("Email",TypeName = "varchar(50)")]
+    [Column("Email",TypeName = "varchar(100)")]
     [Required]
     public required string Email { get; set; } = null!;
 
-    [Column("Password",TypeName = "varchar(32)")]
+    [Column("Senha",TypeName = "varchar(64)")]
     [Required]
     public required string Password { get; set; } = null!;
 
-    [Column("ProfilePhoto",TypeName = "varchar(100)")]
-  //  [Required]
+    [Column("FotoPerfil",TypeName = "varchar(100)")]
     public string? ProfilePhoto { get; set; }
 
-    public ICollection<Post> Posts { get; } = new List<Post>();
+    [Column("Acesso", TypeName="Enum")]
+    public string Acess {get; set;} = null!;
 }

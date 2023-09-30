@@ -3,7 +3,7 @@ create database dbleitour;
 use dbleitour;
 
 create table tbUser(
-	UserId int primary key auto_increment,
+	Id int primary key auto_increment,
     NameUser varchar(20) not null,
     Password varchar(20) not null,
     Email varchar(50) not null unique,
@@ -21,18 +21,18 @@ create table tbPage(
 );
 
 create table tbFollowingPage(
-    UserId int not null,
+    Id int not null,
     PageId int not null,
-    primary key(UserId,PageId),
+    primary key(Id,PageId),
     foreign key(PageId) references tbPage(PageId),
-    foreign key(UserId) references tbUser(UserId),
+    foreign key(Id) references tbUser(Id),
     RoleUser int(3) not null default 0
 );
 
 create table tbPost(
 	postId int primary key auto_increment,
-    UserId int not null,
-    foreign key(UserId) references tbUser(UserId),
+    Id int not null,
+    foreign key(Id) references tbUser(Id),
     PageId int,
     foreign key(PageId) references tbPage(PageId),
     messagePost varchar(280) not null,
@@ -43,8 +43,8 @@ create table tbPost(
 );
 
 create table tbFollowingList(
-    UserId int not null,
-    foreign key(UserId) references tbUser(UserId),
+    Id int not null,
+    foreign key(Id) references tbUser(Id),
     FollowingEmail varchar(50) not null,
     foreign key(FollowingEmail) references tbUser(Email)
 );
@@ -58,8 +58,8 @@ create table tbBookPage(
 
 create table tbSavedBook(
     SavedId int primary key auto_increment,
-    UserId int not null,
-    foreign key(UserId) references tbUser(UserId),
+    Id int not null,
+    foreign key(Id) references tbUser(Id),
     BookKey varchar(25) not null,
     public tinyint not null default 0
 );
@@ -76,8 +76,8 @@ insert into tbUser(NameUser,Password,Email) values('Lucas','12345','Lucas@gmail.
 insert into tbUser(NameUser,Password,Email) values('Daniel','12345','Daniel@gmail.com');
 insert into tbUser(NameUser,Password,Email) values('Luiz','12345','Luiz@gmail.com');
 
-insert into tbPost(UserId,messagePost) values (1,'Primeira vez usando a plataforma');
-insert into tbPost(UserId,messagePost,likes) values (2,'Queria doar alguns livros, alguem tem interesse?',10);
+insert into tbPost(Id,messagePost) values (1,'Primeira vez usando a plataforma');
+insert into tbPost(Id,messagePost,likes) values (2,'Queria doar alguns livros, alguem tem interesse?',10);
 
 insert into tbFollowingList values (1,'Daniel@gmail.com');
 insert into tbFollowingList values (1,'Luiz@gmail.com');
@@ -95,4 +95,4 @@ insert into tbBookPage values('rUIJPwAACAAJ',1);
 insert into tbBookPage values('rkr7zwEACAAJ',1);
 insert into tbBookPage values('yjUQCwAAQBAJ',1);
 
-insert into tbPost(PageId,UserId,messagePost,likes) values (1,2,'Alguem sabe de uma livraria onde vendem todos os livros?',2);
+insert into tbPost(PageId,Id,messagePost,likes) values (1,2,'Alguem sabe de uma livraria onde vendem todos os livros?',2);

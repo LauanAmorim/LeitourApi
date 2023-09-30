@@ -2,6 +2,7 @@ using LeitourApi.Interfaces;
 using LeitourApi.Models;
 using LeitourApi.Repository;
 using Microsoft.EntityFrameworkCore;
+using LeitourApi.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -14,8 +15,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<BookApiRepository>();
 
 string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<LeitourContext>(options =>

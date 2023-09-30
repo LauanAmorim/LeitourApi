@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/lucas/Code_Projects/leitourapi/LeitourApi/LeitourApi.csproj": {}
+    "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/LeitourApi.csproj": {}
   },
   "projects": {
-    "/home/lucas/Code_Projects/leitourapi/LeitourApi/LeitourApi.csproj": {
+    "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/LeitourApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/lucas/Code_Projects/leitourapi/LeitourApi/LeitourApi.csproj",
+        "projectUniqueName": "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/LeitourApi.csproj",
         "projectName": "LeitourApi",
-        "projectPath": "/home/lucas/Code_Projects/leitourapi/LeitourApi/LeitourApi.csproj",
+        "projectPath": "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/LeitourApi.csproj",
         "packagesPath": "/home/lucas/.nuget/packages/",
-        "outputPath": "/home/lucas/Code_Projects/leitourapi/LeitourApi/obj/",
+        "outputPath": "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/lucas/.nuget/NuGet/NuGet.Config"
@@ -52,6 +52,14 @@
               "target": "Package",
               "version": "[7.0.11, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Nuget.ProjectModel": {
+              "target": "Package",
+              "version": "[6.7.0, )"
+            },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[7.0.0, )"
@@ -59,6 +67,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.0.1, )"
             }
           },
           "imports": [
