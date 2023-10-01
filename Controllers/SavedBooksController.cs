@@ -53,7 +53,7 @@ public class SavedBooksController : ControllerBase
         User? user = await uow.UserRepository.GetById(userId);
         if(user == null)
             return message.MsgNotFound();
-        if(user.Acess == "Desativado")
+        if(user.Access == "Desativado")
             return message.MsgDeactivate();
         if(userId != saved.UserId)
             return message.MsgInvalid();
@@ -70,7 +70,7 @@ public class SavedBooksController : ControllerBase
         User? user = await uow.UserRepository.GetById(userId);
         if(user == null)
             return message.MsgNotFound();
-        if(user.Acess == "Desativado")
+        if(user.Access == "Desativado")
             return message.MsgDeactivate();
         var saved = await uow.SavedRepository.GetById(id);
         if(saved == null)
@@ -87,7 +87,7 @@ public class SavedBooksController : ControllerBase
         User? user = await uow.UserRepository.GetById(id);
         if(user == null)
             return message.MsgNotFound();
-        if(user.Acess == "Desativado")
+        if(user.Access == "Desativado")
             return message.MsgDeactivate();
         var saved = await uow.SavedRepository.GetById(id);
         if(saved == null)

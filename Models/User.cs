@@ -3,29 +3,32 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LeitourApi.Models;
 
-[Table("tbUsuario")]
+[Table("tbl_usuario")]
 public class User
 {
     [Key]
-    [Column("Id",TypeName = "int")]
+    [Column("pk_usuario_id",TypeName = "int")]
     [Required]
     public int Id { get; set; }
 
-    [Column("Nome",TypeName = "varchar(30)")]
+    [Column("usuario_nome",TypeName = "varchar(30)")]
     [Required]
     public required string NameUser { get; set;}
 
-    [Column("Email",TypeName = "varchar(100)")]
+    [Column("usuario_email",TypeName = "varchar(100)")]
     [Required]
     public required string Email { get; set; } = null!;
 
-    [Column("Senha",TypeName = "varchar(64)")]
+    [Column("usuario_senha",TypeName = "varchar(64)")]
     [Required]
     public required string Password { get; set; } = null!;
 
-    [Column("FotoPerfil",TypeName = "varchar(100)")]
+    [Column("usuario_foto_perfil",TypeName = "varchar(256)")]
     public string? ProfilePhoto { get; set; }
 
-    [Column("Acesso", TypeName="Enum")]
-    public string Acess {get; set;} = null!;
+    [Column("usuario_acesso", TypeName="Enum")]
+    public string Access {get; set;} = null!;
+
+    [Column("usuario_data_cadastro", TypeName="Datetime")]
+    public DateTime CreatedDate {get; set;}
 }

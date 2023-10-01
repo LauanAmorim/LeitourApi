@@ -13,12 +13,10 @@ namespace LeitourApi.Repository
         private Repository<Comment>  commentRepository {get;}
         private Repository<Annotation> annotationRepository {get;}
         private Repository<SavedBook> savedRepository {get;}
-        private Repository<Roles.Deactivated> deactivateRepository {get;}
         public UnitOfWork(LeitourContext context) => _context = context;
         
         public void Commit() => _context.SaveChanges();
         public IRepository<User> UserRepository => userRepository ?? new Repository<User>(_context);
-        public IRepository<Roles.Deactivated> DeactivateRepository => deactivateRepository ?? new Repository<Roles.Deactivated>(_context);
         public IRepository<Post> PostRepository => postRepository ?? new Repository<Post>(_context);
         public IRepository<Annotation> AnnotationRepository => annotationRepository ?? new Repository<Annotation>(_context);
         public IRepository<SavedBook> SavedRepository => savedRepository ?? new Repository<SavedBook>(_context);

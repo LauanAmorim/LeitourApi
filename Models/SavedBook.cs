@@ -6,16 +6,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LeitourApi.Models
 {
-    [Table("tbBook")]
+    [Table("tbl_livro_salvo")]
     public class SavedBook
     {
 
         [Key]
+        [Column("pk_livro_salvo_id")]
         public int Id { get; set; }
-        [Column("IdUsuario")]
+
+        [Column("fk_usuario_id")]
+
         public int UserId { get; set; }
-        [Column("publico")]
+        [Column("livro_salvo_publico")]
         public bool Public { get; set; }
+
+        [Column("livro_salvo_chave_livro")]
         public string BookKey { get; set; } = null!;
     }
 }

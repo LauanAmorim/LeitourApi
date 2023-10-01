@@ -48,7 +48,7 @@ public class UserController : ControllerBase
         User? registeredUser = await uow.UserRepository.GetByCondition(u => u.Email == loggingUser.Email);
         if (registeredUser == null)
             return message.MsgNotFound();
-        if(await uow.DeactivateRepository.IsDeactivated(registeredUser.Id))
+        if(await uow.UserRepository.IsDeactivated(registeredUser.Id))
             return message.MsgDeactivate();
         if (loggingUser.Password != registeredUser.Password)
             return message.MsgWrongPassword();
@@ -70,7 +70,7 @@ public class UserController : ControllerBase
         var registeredUser = await uow.UserRepository.GetById(user.Id);
         if (registeredUser == null)
             return message.MsgNotFound();
-        if(await uow.DeactivateRepository.IsDeactivated(user.Id))
+        if(await uow.UserRepository.IsDeactivated(user.Id))
             return message.MsgDeactivate();
         if(registeredUser.Id != id)
             return message.MsgInvalid();
@@ -85,9 +85,9 @@ public class UserController : ControllerBase
         User? user = await uow.UserRepository.GetById(id);
         if (user == null)
             return message.MsgNotFound();
-        if(await uow.DeactivateRepository.IsDeactivated(user.Id))
+        if(await uow.UserRepository.IsDeactivated(user.Id))
             return message.MsgDeactivate();
-        user.Acess = "Desativado";
+        user.Access = "Desativado";
         uow.UserRepository.Update(user);
         return Ok($"{user.NameUser} foi desativado");
     }

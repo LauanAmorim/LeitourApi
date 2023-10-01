@@ -8,7 +8,6 @@ namespace LeitourApi.Interfaces
         IRepository<Comment> CommentRepository { get; }
         IRepository<Annotation> AnnotationRepository { get; }
         IRepository<SavedBook> SavedRepository { get; }
-        IRepository<Roles.Deactivated> DeactivateRepository {get;}
         void Commit();
     }
 }

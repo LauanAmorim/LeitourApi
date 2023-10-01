@@ -27,7 +27,7 @@ namespace LeitourApi.Controllers
             if(Post == null)
                 return new Message("Post","o").MsgNotFound(); 
             
-            var comment = await uow.CommentRepository.GetAllByCondition(c => c.Id == Post.Id);
+            var comment = await uow.CommentRepository.GetAllByCondition(c => c.PostId == Post.Id);
             return comment != null ? comment : _message.MsgNotFound();
         }
 
@@ -47,7 +47,7 @@ namespace LeitourApi.Controllers
                 return new Message("Usuari","o").MsgNotFound();
             if (user.Id != Comment.UserId)
                 return _message.MsgInvalid();
-            if (user.Acess == "Desativado")
+            if (user.Access == "Desativado")
                 return _message.MsgDeactivate();
             uow.CommentRepository.Add(Comment);
             return CreatedAtAction("PostComment", Comment);
@@ -60,7 +60,7 @@ namespace LeitourApi.Controllers
             User? user = await uow.UserRepository.GetById(TokenService.DecodeToken(token));
             if(user == null)
                 return new Message("Usuari","o").MsgNotFound();
-            if (user.Acess == "Desativado")
+            if (user.Access == "Desativado")
                 return _message.MsgDeactivate();
 
             var Comment = await uow.CommentRepository.GetById(id);
@@ -83,7 +83,7 @@ namespace LeitourApi.Controllers
                 return new Message("Usuari","o").MsgNotFound();
             if (user.Id != Comment.UserId)
                 return _message.MsgInvalid();
-            if (user.Acess == "Desativado")
+            if (user.Access == "Desativado")
                 return _message.MsgDeactivate();
             uow.CommentRepository.Delete(Comment);
             return _message.MsgDeleted();

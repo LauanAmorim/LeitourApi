@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 namespace LeitourApi.Models;
 
+[Obsolete("Extra")]
 [Table("tbBookPage")]
 [PrimaryKey("BookKey","PageId")]
 public partial class BookPage

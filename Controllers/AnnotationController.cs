@@ -76,7 +76,7 @@ namespace LeitourApi.Controllers
             User? user = await uow.UserRepository.GetById(userId);
             if (user == null)
                 return message.MsgNotFound();
-            if (user.Acess == "Desativado")
+            if (user.Access == "Desativado")
                 return message.MsgDeactivate();
             if (id != annotation.AnnotationId || userId != user.Id)
                 return message.MsgInvalid();
@@ -91,7 +91,7 @@ namespace LeitourApi.Controllers
             User? user = await uow.UserRepository.GetById(userId);
             if (user == null)
                 return message.MsgNotFound();
-            if (user.Acess == "Desativado")
+            if (user.Access == "Desativado")
                 return message.MsgDeactivate();
             var annotation = await uow.AnnotationRepository.GetById(id);
             if (annotation == null)

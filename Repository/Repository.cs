@@ -3,6 +3,7 @@ using LeitourApi.Data;
 using LeitourApi.Interfaces;
 using LeitourApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 public class Repository<T> : IRepository<T> where T : class{
         private LeitourContext _context;
         readonly DbSet<T> dbSet;
@@ -41,7 +42,10 @@ public class Repository<T> : IRepository<T> where T : class{
 
         public async Task<bool> IsDeactivated(int id){
             User? user = await dbSetUser.FindAsync(id);
-            return user.Acess == "Desativado";
+            return user.Access == "Desativado";
         }
         public int Count() => dbSet.Count();
+
+        public async Task<T?> GetFromProcedure(string procedure, string param) => await dbSet.FromSql($"EXECUTE {procedure} {param}").FirstOrDefaultAsync();
+        public async Task<List<T>> GetAllFromProcedure(string procedure, string param) => await dbSet.FromSql($"EXECUTE {procedure} {param}").ToListAsync();
 }

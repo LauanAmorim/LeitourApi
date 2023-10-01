@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeitourApi.Models;
 
+[Obsolete("Extra")]
 [Table("tbFollowingPage")]
 [PrimaryKey("Id","PageId")]
 public class FollowingPage

@@ -4,20 +4,20 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace LeitourApi.Models;
 
-[Table("tbAnnotation")]
+[Table("tbl_anotacao")]
 public class Annotation
 {
     [Key]
-    [Column("IddAnnotation")]
+    [Column("pk_anotacao_id")]
     public int AnnotationId { get; set; }
-    [Column("IdBook")]
+    [Column("fk_livro_salvo_id")]
     public int SavedBookId { get; set; }
-    [Column("ConteudoAnotacao")]
+    [Column("anotacao_texto")]
     public string AnnotationText { get; set; } = null!;
     
-    [Column("DataAnotacao")]
+    [Column("anotacao_data_criacao")]
     public DateTime CreatedDate { get; set; }
-    [Column("DataAlteracao")]
+    [Column("anotacao_data_alteracao")]
     public DateTime AlteratedDate { get; set; }
 
 
