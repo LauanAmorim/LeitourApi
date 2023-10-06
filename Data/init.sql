@@ -2,7 +2,7 @@ Drop database if exists db_leitour;
 CREATE DATABASE db_leitour;
 use db_leitour;
 
--- Tabela tbl_usuario
+-- Tabela usuario
 CREATE TABLE tbl_usuario (
     pk_usuario_id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_nome VARCHAR(30) not null,
@@ -13,28 +13,7 @@ CREATE TABLE tbl_usuario (
     usuario_foto_perfil varchar(256)
 );
 
--- Tabela tbLivros
-CREATE TABLE tbGenero(
-	generoId int primary key,
-    genero varchar(250)
-);
-
-/* - Tabela Para internal storage
-CREATE TABLE tbLivros (
-    ISBN INT PRIMARY KEY,
-    Capa varchar(256),
-    Titulo VARCHAR(250) not null,
-    Autor VARCHAR(250) not null,
-    Sinopse varchar(250),
-    Paginas int not null,
-    GeneroID INT NOT NULL,
-    DataPublicacao DATETIME,
-    Avaliacao FLOAT,
-    FOREIGN KEY (GeneroID) REFERENCES tbGenero(Id)
-);*/
-
-
--- Tabela tbl_publicacao
+-- Tabela publicacao
 
 CREATE TABLE tbl_publicacao (
     pk_publicacao_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,7 +25,7 @@ CREATE TABLE tbl_publicacao (
     publicacao_data_alteracao date
 );
 
--- Tabela tbl_comentario
+-- Tabela comentario
 CREATE TABLE tbl_comentario (
     pk_comentario_id INT AUTO_INCREMENT PRIMARY KEY,
     fk_usuario_id INT not null,
@@ -59,7 +38,7 @@ CREATE TABLE tbl_comentario (
 );
 
 
--- Tabela Books
+-- Tabela livros
 create table tbl_livro_salvo(
     pk_livro_salvo_id int primary key auto_increment,
     fk_usuario_id int not null,
@@ -69,7 +48,7 @@ create table tbl_livro_salvo(
 );
 
 
--- Tabela tbl_anotacao
+-- Tabela anotacao
 
 CREATE TABLE tbl_anotacao (
     pk_anotacao_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,28 +65,31 @@ create table tbl_seguidor(
     fk_usuario_id int not null,
     foreign key(fk_usuario_id) references tbl_usuario(pk_usuario_id),
     fk_usuario_email varchar(100) not null,
-    foreign key(fk_usuario_email) references tbl_usuario(usuario_email)
+    foreign key(fk_usuario_email) references tbl_usuario(usuario_email),
+    primary key(fk_usuario_id,fk_usuario_email)
 );
 
+-- tabela curtidas
 create table tbl_like(
     fk_usuario_id int not null,
     foreign key(fk_usuario_id) references tbl_usuario(pk_usuario_id),
     fk_publicacao_id int not null,
-    foreign key(fk_publicacao_id) references tbl_publicacao(pk_publicacao_id)
+    foreign key(fk_publicacao_id) references tbl_publicacao(pk_publicacao_id),
+    primary key(fk_usuario_id,fk_publicacao_id)
 );
 
 
 delimiter $$
 Create procedure sp_seguidor_seguir(in vIdUser int,in vEmailSeguidor varchar(100))
 begin
-	insert into tbl_seguidores(fk_usuario_id,fk_usuario_email) values (vIdUser,vEmailSeguidor);
+	insert into tbl_seguidor(fk_usuario_id,fk_usuario_email) values (vIdUser,vEmailSeguidor);
 end $$
 delimiter ;
 
 delimiter $$
-Create procedure sp_seguidor_desseguir(in vIdUser int)
+Create procedure sp_seguidor_desseguir(in vIdUser int,in vEmailSeguidor varchar(100))
 begin
-	delete from tbl_seguidores where fk_usuario_id = vIdUser;
+	delete from tbl_seguidor where fk_usuario_id = vIdUser and fk_usuario_email = vEmailSeguidor;
 end $$
 delimiter ;
 
@@ -125,7 +107,7 @@ begin
 end $$
 delimiter ;
 
-
+-- Deletar comentários juntos com a publicacao
 DELIMITER $$
 CREATE TRIGGER tr_publicacao_before_delete
     BEFORE DELETE
@@ -135,9 +117,10 @@ BEGIN
 END$$    
 DELIMITER ;
 
+-- Adicionar a data da ultima alteração
 DELIMITER $$
 CREATE TRIGGER tr_publicacao_after_update
-    BEFORE DELETE
+    BEFORE update
     ON tbl_publicacao FOR EACH ROW
 BEGIN
 	update tbl_publicacao set publicacao_data_alteracao = current_timestamp
@@ -145,9 +128,10 @@ BEGIN
 END$$    
 DELIMITER ;
 
+-- Adicionar a data da ultima alteração
 DELIMITER $$
 CREATE TRIGGER tr_comentario_after_update
-    BEFORE DELETE
+    BEFORE update
     ON tbl_comentario FOR EACH ROW
 BEGIN
 	update tbl_comentario set comentario_data_alteracao = current_timestamp
@@ -155,9 +139,10 @@ BEGIN
 END$$    
 DELIMITER ;
 
+-- Adicionar a data da ultima alteração
 DELIMITER $$
 CREATE TRIGGER tr_anotacao_after_update
-    BEFORE DELETE
+    BEFORE update
     ON tbl_anotacao FOR EACH ROW
 BEGIN
 	update tbl_anotacao set anotacao_data_alteracao = current_timestamp
@@ -165,6 +150,7 @@ BEGIN
 END$$    
 DELIMITER ;
 
+-- Apaga as anotações quando se dessalva o livro
 DELIMITER $$
 CREATE TRIGGER tr_livro_salvo_before_delete
     BEFORE DELETE
@@ -177,5 +163,8 @@ DELIMITER ;
 insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Lucas','12345','Lucas@gmail.com');
 insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Daniel','12345','Daniel@gmail.com');
 insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Luiz','12345','Luiz@gmail.com');
-
 insert into tbl_usuario(usuario_nome,usuario_email,usuario_senha) values ("jose","jose@email.com","1234"),("maria","maria@email.com","4321");
+call sp_seguidor_seguir(1,'Daniel@gmail.com');
+select * from tbl_seguidor;
+call sp_seguidor_desseguir(1,'Daniel@gmail.com');
+select * from tbl_seguidor;
