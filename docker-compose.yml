@@ -4,37 +4,34 @@ networks:
   backend:
 services:
   leitourapi:
-    container_name: containerleitour
+    container_name: containerleitour2
     image: leitourapi:1.0
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "80:80"
-    environment:
-      DOCKER_RUNNING: 'true'
-      MYSQL_ROOT_USER: root
-      MYSQL_ROOT_PASSWORD: 12345678
-      MYSQL_DATABASE: db_leitour
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 12345678
 
     depends_on:
-      - mysql
+      - database
 
-  mysql:
-    container_name: database_leitour
+  database:
+    container_name: database_leitour2
     image: mysql:5.7
     ports:
       - "3306:3306"
+    expose:
+      - 3306
     volumes:
       - db-volume:/var/lib/mysql
+      - ./docker/mysql:/var/lib/mysql/data
+      - ./docker/database:/docker-entrypoint-initdb.d/init.sql
     environment:
-      MYSQL_ROOT_USER: root
-      MYSQL_ROOT_PASSWORD: 12345678
+     # MYSQL_ROOT_USER: root
+      #MYSQL_ROOT_PASSWORD: 12345678
       MYSQL_DATABASE: db_leitour
       MYSQL_USER: mysql
-      MYSQL_PASSWORD: 12345678
+      MYSQL_PASSWORD: 12345678    
 
 volumes:
   db-volume:
