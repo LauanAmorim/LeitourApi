@@ -19,13 +19,13 @@ public class Message : ControllerBase
     }
 
     public ActionResult MsgNotFound() => NotFound($"{controller} não existe.");
-    public ActionResult MsgInvalid() => BadRequest("Autenticação invalida, logue novamente.");
+    public ActionResult MsgInvalid() => Unauthorized("Autenticação invalida, logue novamente.");
 
     public ObjectResult InternalError(string acao) => StatusCode(StatusCodes.Status500InternalServerError, $"{controller} não pode ser {acao}{artigo}");
     public ActionResult MsgWrongPassword() => BadRequest("Senha incorreta.");
     public ActionResult MsgAlreadyExists() => BadRequest($"{controller} já existe");
     public ActionResult MsgSaved() => Ok($"{controller} foi salv{artigo}");
-    public ActionResult MsgCreated() => Ok($"{controller} foi {CREATE}{artigo}");
+    public ActionResult MsgCreated() => StatusCode(StatusCodes.Status201Created,$"{controller} foi {CREATE}{artigo}");
     public ActionResult MsgAlterated() => Ok($"{controller} foi {UPDATE}{artigo}");
     public ActionResult MsgDeleted() => Ok($"{controller} foi {DELETE}{artigo}");
     public ActionResult MsgDeactivate() => Ok($"O usuario foi desativado");

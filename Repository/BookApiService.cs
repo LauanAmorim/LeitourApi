@@ -16,91 +16,88 @@ namespace LeitourApi.Repository;
 
 
 public class BookApiRepository
-{   
-    
-    /*private static string QUERY_PARAM = "q";
-    private static string MODE = "mode";
-    private static string LIMIT = "limit";
-    private static string OFFSET = "offset";*/
-
+{
     readonly HttpClient client = new();
-    const int limit = 10;
-
-    public async Task<JObject> HttpGet(Uri url){
+    public async Task<JObject> HttpGet(Uri url)
+    {
         JObject jsonObject = new();
-        try{
-        HttpResponseMessage response = await client.GetAsync(url);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            jsonObject = JObject.Parse(jsonResponse);
-            if(jsonObject["docs"].IsNullOrEmpty())
-                jsonObject["Code"] = StatusCodes.Status404NotFound;
+            HttpResponseMessage response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                jsonObject = JObject.Parse(jsonResponse);
+                if (jsonObject["items"].IsNullOrEmpty())
+                    jsonObject["Code"] = StatusCodes.Status404NotFound;
+                else
+                    jsonObject["Code"] = StatusCodes.Status200OK;
+            }
             else
-                jsonObject["Code"] = StatusCodes.Status200OK;
+                jsonObject["Code"] = StatusCodes.Status500InternalServerError;
         }
-        else
-            jsonObject["Code"] = StatusCodes.Status500InternalServerError;
-        }catch(Exception e){jsonObject["Code"] = StatusCodes.Status500InternalServerError;}
+        catch (Exception) { jsonObject["Code"] = StatusCodes.Status500InternalServerError; }
         return jsonObject;
     }
 
     public Task<List<BookApi>> FormatResponse(JObject response)
     {
         List<BookApi> Books = new();
-        try{
-        JArray jArray = (JArray)response["docs"];
-        foreach(JObject jsonItems in jArray.Cast<JObject>())
+        try
         {
-            BookApi book = new();
-       
-            string key = jsonItems["key"].ToString();; 
-            book.Key = key;
+            JArray jArray = (JArray)response["items"];
+            foreach (JObject jsonItems in jArray.Cast<JObject>())
+            {
+                BookApi book = new();
 
-          //  JsonObject jsonVolumeInfo = jsonItems["volumeInfo"].AsObject();
+                book.Key = GetStringValue(jsonItems, "id");
 
-            book.Title = jsonItems["title"].ToString();
+                JObject jsonInfo = (JObject)jsonItems["volumeInfo"];
 
-        
-            string[] authorArray = jsonItems["author_name"].ValueAsArray<string>();
-            book.Authors = String.Join(",", authorArray);
-            
-            string[] publisherArray = jsonItems["publisher"].ValueAsArray<string>();
-            book.Publisher = publisherArray.FirstOrDefault();
-            
+                book.Title = GetStringValue(jsonInfo, "title");
+                book.Authors = GetStringFromArrayValue(jsonInfo, "authors");
+                book.Publisher = GetStringValue(jsonInfo, "publisher");
+                book.PublishedDate = GetStringValue(jsonInfo, "publishedDate");
+                book.Description = GetStringValue(jsonInfo, "description");
+                book.Language = GetStringValue(jsonInfo, "language");
+                book.Pages = GetIntValue(jsonInfo, "pageCount");
+                JObject jsonImage = (JObject)jsonInfo["imageLinks"];
+                book.Cover = GetStringValue(jsonImage, "thumbnail").Replace("zoom=1","zoom=0");
+                book.ISBN_10 = "";
+                book.ISBN_13 = "";
 
-            book.PublishedDate= jsonItems["first_publish_year"].ToString();
-
-           
-            book.Description = "";//jsonItems["description"].ToString();
-
-            
-            try {string[] languageArray = jsonItems["language"].ValueAsArray<string>(); 
-            book.Language = String.Join(",", languageArray);}
-            catch{book.Language = "";}
-
-            try { book.Pages = (int) jsonItems["number_of_pages_median"];}
-            catch{ book.Pages = 0;}
-
-        /*    try { book.BookIsbn = jsonItems["isbn"].ValueAsArray<string>()[0];}
-            catch{ book.BookIsbn = "";}*/
-           
-
-            /*book.Categories = "null";
-
-            string[] isbn = jsonItems["industryIdentifiers"].ValueAsArray<string>();
-
-            //try { book.Categories = (string)jsonVolumeInfo["categories"].AsArray().AsValue(); }
-            //catch{ book.Categories = "null";}
-           /* */
-
-            try { book.Cover = $"https://covers.openlibrary.org/b/olid/{key}-L.jpg";}
-            catch{ book.Cover = "";}
-            
-            Books.Add(book);
+                JObject[] jsonArray = jsonInfo["industryIdentifiers"].ValueAsArray<JObject>();
+                foreach (JObject jObj in jsonArray)
+                {
+                    if (jObj["type"].ToString() == "ISBN_10")
+                        book.ISBN_10 = GetStringValue(jObj, "identifier");
+                    else if (jObj["type"].ToString() == "ISBN_13")
+                        book.ISBN_13 = GetStringValue(jObj, "identifier");
+                }
+                Books.Add(book);
+            }
         }
-        }
-        catch(Exception e){}
+        catch (Exception) { }
         return Task.FromResult(Books);
+    }
+
+    private string GetStringValue(JObject json, string key)
+    {
+         try { return json[key].ToString(); }
+        catch { return ""; }
+    }
+    private string GetStringFromArrayValue(JObject json, string key)
+    {
+        try
+        {
+            string[] array = json[key].ValueAsArray<string>();
+            return string.Join(",", array);
+        }
+        catch { return ""; }
+    }
+    private int GetIntValue(JObject json, string key)
+    {
+        try { return (int)json[key]; }
+        catch { return 0; }
     }
 }

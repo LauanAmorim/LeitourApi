@@ -63,7 +63,7 @@ namespace LeitourApi.Controllers
             if (id != updatePost.Id || TokenService.DecodeToken(token) != updatePost.UserId)
                 return _message.MsgInvalid();
             uow.PostRepository.Update(updatePost);
-            return _message.MsgCreated();
+            return _message.MsgAlterated();
         }
 
         

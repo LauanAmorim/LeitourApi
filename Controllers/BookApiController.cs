@@ -20,8 +20,9 @@ namespace LeitourApi.Controllers
     public class BookApiController : ControllerBase
     {
 
-        private static string API_URL = "https://openlibrary.org/";
-        //volumes?q=intitle:{bookName}&key=AIzaSyAz_H70Ju10k16gGDt-V-wQnYll-q7q7LY";//"";
+      
+        private static string API_PARAMS = "&maxResults=10&key=AIzaSyAz_H70Ju10k16gGDt-V-wQnYll-q7q7LY";
+        private static string API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
         public readonly BookApiRepository _bookApi;
         public readonly Message mesage;
@@ -34,27 +35,37 @@ namespace LeitourApi.Controllers
         [HttpGet("Title/{title}")]
         public async Task<ActionResult<IEnumerable<BookApi>>?> GetByTitle(string title)
         {
-            Uri url = new($"{API_URL}search.json?q={title}&limit=10");
+            Uri url = new($"{API_URL}intitle:{title}{API_PARAMS}");
             JObject response = await _bookApi.HttpGet(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
                 return mesage.MsgNotReturned();
             if((int?) response["Code"]  == StatusCodes.Status404NotFound)
                 return mesage.MsgNotFound();
-            //return mesage.MsgDebugValue(response.ToString());
             List<BookApi> books = await _bookApi.FormatResponse(response);
             return books;
         }
 
         [HttpGet("isbn/{isbn}")]
-        public async Task<ActionResult<IEnumerable<BookApi>>?> GetByIsbn(string isbn)
+        public async Task<ActionResult<BookApi>?> GetByIsbn(string isbn)
         {
-            Uri url = new($"{API_URL}search.json?isbn={isbn}&limit=10");
+            Uri url = new($"{API_URL}isbn:{isbn}{API_PARAMS}");
             JObject response = await _bookApi.HttpGet(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
                 return mesage.MsgNotReturned();
             if((int?) response["Code"]  == StatusCodes.Status404NotFound)
                 return mesage.MsgNotFound();
-            //return mesage.MsgDebugValue(response.ToString());
+            BookApi book = (await _bookApi.FormatResponse(response))[0];
+            return book;
+        }
+        [HttpGet("author/{author}")]
+        public async Task<ActionResult<IEnumerable<BookApi>>?> GetByAuthor(string author)
+        {
+            Uri url = new($"{API_URL}inauthor:{author}{API_PARAMS}");
+            JObject response = await _bookApi.HttpGet(url);
+            if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
+                return mesage.MsgNotReturned();
+            if((int?) response["Code"]  == StatusCodes.Status404NotFound)
+                return mesage.MsgNotFound();
             List<BookApi> books = await _bookApi.FormatResponse(response);
             return books;
         }

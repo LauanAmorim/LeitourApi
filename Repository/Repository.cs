@@ -48,4 +48,14 @@ public class Repository<T> : IRepository<T> where T : class{
 
         public async Task<T?> GetFromProcedure(string procedure, string param) => await dbSet.FromSql($"EXECUTE {procedure} {param}").FirstOrDefaultAsync();
         public async Task<List<T>> GetAllFromProcedure(string procedure, string param) => await dbSet.FromSql($"EXECUTE {procedure} {param}").ToListAsync();
+
+    public Task<T?> GetWithSelect(Expression<Func<T, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<T>?> GetAllWithSelect(Expression<Func<T, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
 }
