@@ -7,16 +7,12 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="">
     <img src="https://github.com/LucasRabaquim/NewLeitourApi/assets/98958822/afdf162f-9942-4c2e-a301-7389f02a8606" alt="Logo" width="240" height="auto">
   </a>
-
 
 <h3 align="center">Leitour API</h3>
 
@@ -31,9 +27,7 @@
     
     <a href="https://github.com/LucasRabaquim/NewLeitourApi/issues">Request Feature</a>
   </p>
-
 </div>
-
 
 
 <!-- TABLE OF CONTENTS -->
@@ -54,23 +48,19 @@ out-the-project">Sobre o projeto</a>
         <li><a href="#installation">Execução</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#usage">Aplicação da Api</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#contact">Contato</a></li>
   </ol>
 </details>
-
 
 
 <!-- ABOUT THE PROJECT -->
 ## Sobre o projeto
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-O projeto está conteirizado em Docker para facilitar sua execução: `github_username`, `project_title`, `project_description`
+<!--  [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
+ Está Api foi desenvolvida para auxiliar no desenvolvimento do TCC do curso de Desenvolvimento de Sistemas da ETEC Basilides de Godoy. Está Api representa os conhecimentos adquiridos em Bancos de Dados, AspNet e, por iniciativa própria, Containerização com Docker.
 
 <p align="right">(<a href="#readme-top">Volte ao início</a>)</p>
 
@@ -86,9 +76,7 @@ O projeto está conteirizado em Docker para facilitar sua execução: `github_us
 <p align="right">(<a href="#readme-top">Volte ao início</a>)</p>
 
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+ Pela Dockerização da Api só é necessário ter o Docker instalado e, por ele, executar o container seguindo as instruções posteriores.
 
 ### Pré requisitos
 
@@ -99,11 +87,6 @@ https://learn.microsoft.com/en-us/windows/wsl/install
 Instalação do Docker Desktop:
 https://docs.docker.com/engine/install/
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
 #### Linux Distro
 Seguir as instruções de execução do script de instalação do Docker:
 https://github.com/docker/docker-install
@@ -118,10 +101,8 @@ https://github.com/docker/compose-cli/blob/main/INSTALL.md
    git clone https://github.com/LucasRabaquim/NewLeitourApi.git
    ```
 2. Abra no diretório Raiz do projeto
-   ```sh
-   npm install
-   ```
-3. Garanta que o Docker esteja ativado
+
+3. Garanta que o Docker esteja rodando
 
 4. Execute o comando de inicialização do Container
    ```bash
@@ -136,15 +117,16 @@ https://github.com/docker/compose-cli/blob/main/INSTALL.md
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+## Aplicação da API
+Atualmente a Api será utilizada pelos seguintes projetos>
+<ol>
+    <li>
+      <a href="https://github.com/LucasRabaquim/NewLeitourApp">Aplicativo da Leitour</a>
+     </li>
+        <li><a href="https://github.com/LauanAmorim/LeitourAsp">Sistema Web da Leitour</a></li>
+</ol>
 
 <p align="right">(<a href="#readme-top">Volte ao início</a>)</p>
-
-
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -164,26 +146,18 @@ Veja [open issues](https://github.com/LucasRabaquim/NewLeitourApi/issues) para s
 
 <!-- LICENSE -->
 ## License
-
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">Volte ao início</a>)</p>
 
-
-
 <!-- CONTACT -->
 ## Contato
-
+Instagram - [DevPolarys](https://www.instagram.com/devpolarys/)
 <!-- Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@contato.polarys@gmail.com.com -->
 
 Link do Projeto: [https://github.com/LucasRabaquim/NewLeitourApi](https://github.com/LucasRabaquim/NewLeitourApi)
 
 <p align="right">(<a href="#readme-top">Volte ao início</a>)</p>
-
-
-<p align="right">(<a href="#readme-top">Voltar ao início</a>)</p>
-
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
