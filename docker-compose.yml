@@ -4,7 +4,7 @@ networks:
   backend:
 services:
   leitourapi:
-    container_name: containerleitour2
+    container_name: containerleitour
     image: leitourapi:1.0
     build:
       context: .
@@ -16,19 +16,20 @@ services:
       - database
 
   database:
-    container_name: database_leitour2
+    container_name: database_leitour
     image: mysql:5.7
     ports:
-      - "3306:3306"
+      - "1234:3306"
     expose:
-      - 3306
+      - 1234
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
       - db-volume:/var/lib/mysql
-      - ./docker/mysql:/var/lib/mysql/data
-      - ./docker/database:/docker-entrypoint-initdb.d/init.sql
+      - "./init.sql:/docker-entrypoint-initdb.d/1.sql"
+     # - "./scripts/data.sql:/docker-entrypoint-initdb.d/1.sql"
     environment:
      # MYSQL_ROOT_USER: root
-      #MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_ROOT_PASSWORD: 12345678
       MYSQL_DATABASE: db_leitour
       MYSQL_USER: mysql
       MYSQL_PASSWORD: 12345678    

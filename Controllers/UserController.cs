@@ -31,15 +31,15 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<dynamic>> AddUser([FromBody] User user)
+    public async Task<ActionResult<dynamic>> AddUser([FromBody] User newUser)
     {
-        User? registeredUser = await uow.UserRepository.GetByCondition(u => u.Email == user.Email);
+        User? registeredUser = await uow.UserRepository.GetByCondition(u => u.Email == newUser.Email);
         if (registeredUser != null)
             return message.MsgAlreadyExists();
-        uow.UserRepository.Add(user);
-        User? newUser = await uow.UserRepository.GetById(user.Id);
-        string token = TokenService.GenerateToken(newUser);
-        return new { newUser, token };
+        uow.UserRepository.Add(newUser);
+        User? loggingUser = await uow.UserRepository.GetById(newUser.Id);
+        string token = TokenService.GenerateToken(loggingUser);
+        return new { user = loggingUser, token };
     }
 
     [HttpPost("login")]

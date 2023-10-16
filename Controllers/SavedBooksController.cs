@@ -89,10 +89,10 @@ public class SavedBooksController : ControllerBase
             return message.MsgNotFound();
         if(user.Access == "Desativado")
             return message.MsgDeactivate();
-        var saved = await uow.SavedRepository.GetById(id);
+        var saved = await uow.SavedRepository.GetById(savedId);
         if(saved == null)
             return message.MsgNotFound();
-        uow.UserRepository.Update(user);
-        return message.MsgAlterated();
+        uow.SavedRepository.Delete(saved);
+        return message.MsgDeleted();
     }
 }

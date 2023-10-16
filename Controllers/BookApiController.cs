@@ -69,5 +69,17 @@ namespace LeitourApi.Controllers
             List<BookApi> books = await _bookApi.FormatResponse(response);
             return books;
         }
+        [HttpGet("key/{key}")]
+        public async Task<ActionResult<BookApi>?> GetByKey(string key)
+        {
+            Uri url = new($"https://www.googleapis.com/books/v1/volumes/{key}");
+            JObject response = await _bookApi.HttpGet(url);
+            if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
+                return mesage.MsgNotReturned();
+            if((int?) response["Code"]  == StatusCodes.Status404NotFound)
+                return mesage.MsgNotFound();
+            BookApi book = (await _bookApi.FormatResponse(response))[0];
+            return book;
+        }
     }
 }
