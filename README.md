@@ -92,26 +92,43 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
+##### Windows
+Ativar o Subsistema Linux para Windows
+https://learn.microsoft.com/en-us/windows/wsl/install
+
+Instalação do Docker Desktop:
+https://docs.docker.com/engine/install/
+
 This is an example of how to list things you need to use the software and how to install them.
 * npm
   ```sh
   npm install npm@latest -g
   ```
+#### Linux Distro
+Seguir as instruções de execução do script de instalação do Docker:
+https://github.com/docker/docker-install
+
+Seguir as instruções de instalação do Docker Compose:
+https://github.com/docker/compose-cli/blob/main/INSTALL.md
+  
 
 ### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone este repositório
    ```sh
    git clone https://github.com/LucasRabaquim/NewLeitourApi.git
    ```
-3. Install NPM packages
+2. Abra no diretório Raiz do projeto
    ```sh
    npm install
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+3. Garanta que o Docker esteja ativado
+
+4. Execute o comando de inicialização do Container
+   ```bash
+   # Distros linux
+   docker compose up
+   # Windows
+   docker-compose up 
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
