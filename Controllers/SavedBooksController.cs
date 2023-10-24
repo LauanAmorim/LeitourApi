@@ -20,22 +20,22 @@ public class SavedBooksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<SavedBook>>> GetAllSaved([FromHeader] string token)
+    public async Task<ActionResult<List<SavedBook>>> GetAllSaved([FromHeader] string token,[FromQuery(Name = Constants.OFFSET)] int page)
     {
         int id = TokenService.DecodeToken(token);
         if(await uow.UserRepository.GetById(id) == null)
             return message.MsgInvalid();
-        List<SavedBook> saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == id);
+        List<SavedBook> saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == id,page);
         return (saved != null) ? saved : message.MsgNotFound();
     }
 
     [HttpGet("User/{email}")]
-    public async Task<ActionResult<List<SavedBook>>> GetAllSavedByEmail(string email)
+    public async Task<ActionResult<List<SavedBook>>> GetAllSavedByEmail(string email,[FromQuery(Name = Constants.OFFSET)] int page)
     {
         User? user = await uow.UserRepository.GetByCondition(u => u.Email == email);
         if(user == null)
             return message.NotFound();
-        List<SavedBook> saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == user.Id && s.Public == true);
+        List<SavedBook> saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == user.Id && s.Public == true,page);
         return (saved != null) ? saved : message.MsgNotFound();
     }
 
@@ -57,6 +57,9 @@ public class SavedBooksController : ControllerBase
             return message.MsgDeactivate();
         if(userId != saved.UserId)
             return message.MsgInvalid();
+        var savedBook = await uow.SavedRepository.GetByCondition(s => s.BookKey == saved.BookKey && s.UserId == userId);
+        if(savedBook != null)
+            return message.MsgAlreadyExists();
         uow.SavedRepository.Add(saved);
         return CreatedAtAction("AddSaved", new { saved });
     }

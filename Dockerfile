@@ -22,3 +22,10 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "LeitourApi.dll"]
+
+# Execute
+#docker system prune --all --force --volumes
+#docker container prune
+#docker image prune
+#docker volume prune
+#docker network prune 

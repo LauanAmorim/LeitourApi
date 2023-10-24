@@ -13,18 +13,24 @@ namespace LeitourApi.Controllers
     {
         private readonly Message _message;
         private readonly IUnitOfWork uow;
-        public PostsController(IUnitOfWork unitOfWork)
+        private readonly IPostRepository postRepository;
+        public const string offset = "offset";
+
+        public PostsController(IUnitOfWork unitOfWork,IPostRepository Ipost)
         {
             uow = unitOfWork;
+            postRepository = Ipost;
             _message = new Message("Post", "o");
         }
 
+
         [HttpGet]
-        public async Task<ActionResult<List<Post>>> GetPosts()
+        public async Task<ActionResult<List<Post>>> GetPosts([FromQuery(Name = offset)] int page)
         {
-            var posts = await uow.PostRepository.GetAll();
+            var posts = await uow.PostRepository.GetAll(page);
             return posts != null ? posts : _message.MsgNotFound();
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)
@@ -33,20 +39,21 @@ namespace LeitourApi.Controllers
             return post != null ? post : _message.MsgNotFound();
         }
 
+
         [HttpGet("email/{email}")]
-        public async Task<ActionResult<List<Post>>> GetPostsByEmail(string email)
+        public async Task<ActionResult<List<Post>>> GetPostsByEmail(string email,[FromQuery(Name = offset)] int page)
         {
             var user = await uow.UserRepository.GetByCondition(u => u.Email == email);
             if(user == null)
                 return new Message("Usuario","o").MsgNotFound();
-            var posts = await uow.PostRepository.GetAllByCondition(p => p.UserId == user.Id);
+            var posts = await uow.PostRepository.GetAllByCondition(p => p.UserId == user.Id,page);
             return posts != null ? posts : _message.MsgNotFound();
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost([FromHeader] string token, Post post)
         {
-            
             if (TokenService.DecodeToken(token) != post.UserId)
                 return _message.MsgInvalid();
             uow.PostRepository.Add(post);

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LeitourApi.Models;
 
-[Obsolete("Extra")]
+
 [Table("tbPage")]
 public partial class Page
 {

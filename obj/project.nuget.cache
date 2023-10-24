@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/jX0K+gbrQlNeOwSwMQUt0fjWMBe8WRSi74n44VYo4r8svbiUePfWUOCgpRuHbLTS0ArueDjDjB4zJsA+2wvzw==",
+  "dgSpecHash": "1a00+gl4qeeeZzpassIXWwM6aAoeL0yAQX8MpeW0sjsDNEDXsQoiHJXtOushWbmup2ZaTEtSMroX1rgmGkYG2g==",
   "success": true,
-  "projectFilePath": "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/LeitourApi.csproj",
+  "projectFilePath": "/home/lucas/Code_Projects/leitourapi/LeitourApi/LeitourApi.csproj",
   "expectedPackageFiles": [
     "/home/lucas/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/lucas/.nuget/packages/microsoft.aspnetcore.openapi/7.0.11/microsoft.aspnetcore.openapi.7.0.11.nupkg.sha512",

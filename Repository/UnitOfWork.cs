@@ -8,19 +8,18 @@ namespace LeitourApi.Repository
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
        private LeitourContext _context;
-        private Repository<User> userRepository {get;}
-        private Repository<Post> postRepository {get;}
-        private Repository<Comment>  commentRepository {get;}
-        private Repository<Annotation> annotationRepository {get;}
-        private Repository<SavedBook> savedRepository {get;}
+        private Repository<User>? userRepository {get;}
+        private PostRepository? postRepository {get;}
+        private CommentRepository?  commentRepository {get;}
+        private Repository<Annotation>? annotationRepository {get;}
+        private Repository<SavedBook>? savedRepository {get;}
         public UnitOfWork(LeitourContext context) => _context = context;
         
         public void Commit() => _context.SaveChanges();
         public IRepository<User> UserRepository => userRepository ?? new Repository<User>(_context);
-        public IRepository<Post> PostRepository => postRepository ?? new Repository<Post>(_context);
+        public IRepository<Post> PostRepository => postRepository ?? new PostRepository(_context);
         public IRepository<Annotation> AnnotationRepository => annotationRepository ?? new Repository<Annotation>(_context);
         public IRepository<SavedBook> SavedRepository => savedRepository ?? new Repository<SavedBook>(_context);
-
         public IRepository<Comment> CommentRepository => commentRepository ?? new Repository<Comment>(_context);
 
        private bool disposed = false;

@@ -5,6 +5,7 @@ using LeitourApi.Interfaces;
 using System.Threading.Tasks;
 using LeitourApi.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LeitourApi.Controllers
 {
@@ -21,13 +22,13 @@ namespace LeitourApi.Controllers
         }
 
         [HttpGet("/api/Posts/[Controller]/{id}")]
-        public async Task<ActionResult<List<Comment>>> GetComments(int id)
+        public async Task<ActionResult<List<Comment>>> GetComments(int id,[FromQuery(Name = Constants.OFFSET)] int page)
         {
             var Post = await uow.PostRepository.GetById(id);
             if(Post == null)
                 return new Message("Post","o").MsgNotFound(); 
             
-            var comment = await uow.CommentRepository.GetAllByCondition(c => c.PostId == Post.Id);
+            var comment = await uow.CommentRepository.GetAllByCondition(c => c.PostId == Post.Id,page);
             return comment != null ? comment : _message.MsgNotFound();
         }
 

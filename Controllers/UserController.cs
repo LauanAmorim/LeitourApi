@@ -14,6 +14,8 @@ public class UserController : ControllerBase
 {
     private readonly IUnitOfWork uow;
     private readonly Message message;
+    
+
     public UserController(IUnitOfWork unitOfWork)
     {
         uow = unitOfWork;
@@ -21,7 +23,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<User>>> GetUsers() => await uow.UserRepository.GetAll();
+    public async Task<ActionResult<List<User>>> GetUsers([FromQuery(Name = Constants.OFFSET)] int page) => await uow.UserRepository.GetAll(page);
 
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUser(int id)

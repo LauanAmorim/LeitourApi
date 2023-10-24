@@ -14,11 +14,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<BookApiRepository>();
 
-string? connection = "Server=database; port=3306; Database=db_leitour; Uid=mysql; Pwd=12345678";//builder.Configuration.GetConnectionString("DefaultConnection");
+string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine(connection);
 builder.Services.AddDbContext<LeitourContext>(options =>
     options.UseMySql(connection,ServerVersion.AutoDetect(connection))

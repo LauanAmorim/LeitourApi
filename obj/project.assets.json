@@ -2126,11 +2126,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/LeitourApi.csproj",
+      "projectUniqueName": "/home/lucas/Code_Projects/leitourapi/LeitourApi/LeitourApi.csproj",
       "projectName": "LeitourApi",
-      "projectPath": "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/LeitourApi.csproj",
+      "projectPath": "/home/lucas/Code_Projects/leitourapi/LeitourApi/LeitourApi.csproj",
       "packagesPath": "/home/lucas/.nuget/packages/",
-      "outputPath": "/home/lucas/Code_Projects/leitourapi/NewLeitourApi-main/obj/",
+      "outputPath": "/home/lucas/Code_Projects/leitourapi/LeitourApi/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/lucas/.nuget/NuGet/NuGet.Config"

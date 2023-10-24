@@ -21,7 +21,7 @@ namespace LeitourApi.Controllers
     {
 
       
-        private static string API_PARAMS = "&maxResults=10&key=AIzaSyAz_H70Ju10k16gGDt-V-wQnYll-q7q7LY";
+        private static string API_PARAMS = "&maxResults=20&key=AIzaSyAz_H70Ju10k16gGDt-V-wQnYll-q7q7LY&startIndex=";
         private static string API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
         public readonly BookApiRepository _bookApi;
@@ -33,9 +33,9 @@ namespace LeitourApi.Controllers
         }
 
         [HttpGet("Title/{title}")]
-        public async Task<ActionResult<IEnumerable<BookApi>>?> GetByTitle(string title)
+        public async Task<ActionResult<IEnumerable<BookApi>>?> GetByTitle(string title,[FromQuery(Name = Constants.OFFSET)] int page)
         {
-            Uri url = new($"{API_URL}intitle:{title}{API_PARAMS}");
+            Uri url = new($"{API_URL}intitle:{title}{API_PARAMS}{page}");
             JObject response = await _bookApi.HttpGet(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
                 return mesage.MsgNotReturned();
@@ -48,7 +48,7 @@ namespace LeitourApi.Controllers
         [HttpGet("isbn/{isbn}")]
         public async Task<ActionResult<BookApi>?> GetByIsbn(string isbn)
         {
-            Uri url = new($"{API_URL}isbn:{isbn}{API_PARAMS}");
+            Uri url = new($"{API_URL}isbn:{isbn}");
             JObject response = await _bookApi.HttpGet(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
                 return mesage.MsgNotReturned();
@@ -58,9 +58,9 @@ namespace LeitourApi.Controllers
             return book;
         }
         [HttpGet("author/{author}")]
-        public async Task<ActionResult<IEnumerable<BookApi>>?> GetByAuthor(string author)
+        public async Task<ActionResult<IEnumerable<BookApi>>?> GetByAuthor(string author,[FromQuery(Name = Constants.OFFSET)] int page)
         {
-            Uri url = new($"{API_URL}inauthor:{author}{API_PARAMS}");
+            Uri url = new($"{API_URL}inauthor:{author}{API_PARAMS}{page}");
             JObject response = await _bookApi.HttpGet(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
                 return mesage.MsgNotReturned();

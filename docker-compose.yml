@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "7770:80"
 
     depends_on:
       - database
@@ -19,20 +19,19 @@ services:
     container_name: database_leitour
     image: mysql:5.7
     ports:
-      - "1234:3306"
+      - 1234:3306
     expose:
       - 1234
-    command: --default-authentication-plugin=mysql_native_password
-    volumes:
-      - db-volume:/var/lib/mysql
-      - "./init.sql:/docker-entrypoint-initdb.d/1.sql"
-     # - "./scripts/data.sql:/docker-entrypoint-initdb.d/1.sql"
     environment:
-     # MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: 12345678
       MYSQL_DATABASE: db_leitour
       MYSQL_USER: mysql
-      MYSQL_PASSWORD: 12345678    
+      MYSQL_PASSWORD: 12345678   
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/1.sql
+      - db-volume:/var/lib/mysql/
+
+     
 
 volumes:
   db-volume:

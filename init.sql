@@ -20,7 +20,6 @@ CREATE TABLE tbl_publicacao (
     fk_usuario_id INT not null,
     FOREIGN KEY (fk_usuario_id) REFERENCES tbl_usuario(pk_usuario_id),
     publicacao_texto VARCHAR(250) not null,
-	publicacao_like int not null default 0,
     publicacao_data_criacao DATETIME default current_timestamp,
     publicacao_data_alteracao date
 );
@@ -87,6 +86,20 @@ end $$
 delimiter ;
 
 delimiter $$
+Create procedure sp_select_seguidor_seguintes(in vEmailSeguidor varchar(100))
+begin
+	select * from tbl_usuario inner JOIN tbl_seguidor on fk_usuario_email = vEmailSeguidor;
+end $$
+delimiter ;
+
+delimiter $$
+Create procedure sp_select_seguidor_seguidores(in vIdUser int)
+begin
+	select * from tbl_usuario inner JOIN tbl_seguidor on fk_usuario_id = vIdUser;
+end $$
+delimiter ;
+
+delimiter $$
 Create procedure sp_seguidor_desseguir(in vIdUser int,in vEmailSeguidor varchar(100))
 begin
 	delete from tbl_seguidor where fk_usuario_id = vIdUser and fk_usuario_email = vEmailSeguidor;
@@ -106,6 +119,7 @@ begin
 	delete from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao;
 end $$
 delimiter ;
+
 
 -- Deletar comentários juntos com a publicacao
 DELIMITER $$
@@ -130,17 +144,6 @@ DELIMITER ;
 
 -- Adicionar a data da ultima alteração
 DELIMITER $$
-CREATE TRIGGER tr_comentario_after_update
-    BEFORE update
-    ON tbl_comentario FOR EACH ROW
-BEGIN
-	update tbl_comentario set comentario_data_alteracao = current_timestamp
-    where tbl_comentario.pk_comentario_id = OLD.pk_comentario_id;
-END$$    
-DELIMITER ;
-
--- Adicionar a data da ultima alteração
-DELIMITER $$
 CREATE TRIGGER tr_anotacao_after_update
     BEFORE update
     ON tbl_anotacao FOR EACH ROW
@@ -160,11 +163,43 @@ BEGIN
 END$$    
 DELIMITER ;
 
+
 insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Lucas','12345','Lucas@gmail.com');
 insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Daniel','12345','Daniel@gmail.com');
 insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Luiz','12345','Luiz@gmail.com');
 insert into tbl_usuario(usuario_nome,usuario_email,usuario_senha) values ("jose","jose@email.com","1234"),("maria","maria@email.com","4321");
+
+
+insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(1,'Tesytando');
+insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(3,'Tesytando');
+insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(5,'Tesytando');
+
 call sp_seguidor_seguir(1,'Daniel@gmail.com');
 select * from tbl_seguidor;
 call sp_seguidor_desseguir(1,'Daniel@gmail.com');
 select * from tbl_seguidor;
+
+
+insert into tbl_comentario(fk_usuario_id,fk_publicacao_id,comentario_texto) values(1,1,'Eai man');
+
+
+ -- selecionar a publicação e o nome do usuario
+ delimiter //
+create view vw_comentario as
+SELECT tbl_comentario.*,tbl_usuario.usuario_nome
+    FROM tbl_comentario
+	Inner JOIN tbl_usuario on pk_usuario_id
+    where tbl_usuario.pk_usuario_id = tbl_comentario.fk_usuario_id;
+//
+delimiter ;
+    
+delimiter //
+create view vw_publicacao as
+SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,
+    (SELECT COUNT(*) FROM tbl_like
+        WHERE fk_publicacao_id = pk_publicacao_id) as likes
+    FROM tbl_publicacao
+    Inner JOIN tbl_usuario on pk_usuario_id
+    where tbl_usuario.pk_usuario_id = tbl_publicacao.fk_usuario_id;
+//
+delimiter ;

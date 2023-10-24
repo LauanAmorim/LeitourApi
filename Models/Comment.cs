@@ -16,6 +16,9 @@ public class Comment
     [Column("fk_usuario_id", TypeName = "int")]
     public required int UserId { get; set; }
 
+    [Column("usuario_nome")]
+    public string? UserName { get; set; }
+
     [Column("fk_publicacao_id", TypeName = "int")]
     public required int PostId { get; set; }
 
