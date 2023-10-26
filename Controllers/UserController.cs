@@ -3,8 +3,10 @@ using LeitourApi.Models;
 using LeitourApi.Repository;
 using LeitourApi.Interfaces;
 using LeitourApi.Data;
+using LeitourApi.Utils;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
+
 
 namespace LeitourApi.Controllers;
 
@@ -38,6 +40,7 @@ public class UserController : ControllerBase
         User? registeredUser = await uow.UserRepository.GetByCondition(u => u.Email == newUser.Email);
         if (registeredUser != null)
             return message.MsgAlreadyExists();
+        newUser.Password = Hash.GerarHash(newUser.Password);
         uow.UserRepository.Add(newUser);
         User? loggingUser = await uow.UserRepository.GetById(newUser.Id);
         string token = TokenService.GenerateToken(loggingUser);
@@ -52,7 +55,7 @@ public class UserController : ControllerBase
             return message.MsgNotFound();
         if(await uow.UserRepository.IsDeactivated(registeredUser.Id))
             return message.MsgDeactivate();
-        if (loggingUser.Password != registeredUser.Password)
+        if (Hash.GerarHash(loggingUser.Password) != registeredUser.Password)
             return message.MsgWrongPassword();
         string token = TokenService.GenerateToken(registeredUser);
         return new { user = registeredUser, token };
