@@ -3,6 +3,7 @@ using LeitourApi.Models;
 using LeitourApi.Repository;
 using LeitourApi.Interfaces;
 using LeitourApi.Data;
+using LeitourApi.Utils;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
 
@@ -61,6 +62,7 @@ public class UserController : ControllerBase
             return message.MsgNotFound();
         if(await uow.UserRepository.IsDeactivated(registeredUser.Id))
             return message.MsgDeactivate();
+        if (Hash.GerarHash(loggingUser.Password) != registeredUser.Password)
         if (Hash.GerarHash(loggingUser.Password) != registeredUser.Password)
             return message.MsgWrongPassword();
         string token = TokenService.GenerateToken(registeredUser);
