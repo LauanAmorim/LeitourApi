@@ -31,28 +31,28 @@ public class Repository<T> : IRepository<T> where T : class
         await dbSet.Where(predicate).Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
 
 
-    public void Add(T entity)
+    public async Task Add(T entity)
     {
-        dbSet.AddAsync(entity);
-        _context.SaveChanges();
+        _ = await dbSet.AddAsync(entity);
+        await _context.SaveChangesAsync();
     }
 
-    public void Update(T entity)
+    public async Task Update(T entity)
     {
         dbSet.Entry(entity).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void Delete(T entity)
+    public async Task Delete(T entity)
     {
         dbSet.Remove(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
     public async Task<bool> IsDeactivated(int id)
     {
         User? user = await dbSetUser.FindAsync(id);
-        return user.Access == "Desativado";
+        return user == null || user.Access == "Desativado";
     }
     public int Count() => dbSet.Count();
 
@@ -61,14 +61,8 @@ public class Repository<T> : IRepository<T> where T : class
     public async Task<List<T>> GetAllFromProcedure(string procedure,int offset) => await dbSet.FromSql($"EXECUTE {procedure}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
     public async Task<List<T>> GetAllFromProcedure(string procedure, string param,int offset) => await dbSet.FromSql($"EXECUTE {procedure} {param}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
 
-    public async Task<List<T>> GetFromView(string view,int offset) => await dbSet.FromSql($"select * from {view}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
-    public async Task<List<T>> GetFromView(string view, string param,int offset) => await dbSet.FromSql($"select * from {view} where {param}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
-    //public async Task<List<T>> GetFromView(string view, string param,int offset) => await dbSet.FromSql($"select * from {view} where {param}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
-
-
     public async Task<List<T>?> GetAllWithJoin(Expression<Func<T, object>> join) =>
         await dbSet.Include(join).ToListAsync();
     public async Task<List<T>?> GetAllWithConditionJoin(Expression<Func<T, bool>> predicate,Expression<Func<T,string>> join) =>
         await dbSet.Where(predicate).Include(join).ToListAsync();
-
 }

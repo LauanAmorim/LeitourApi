@@ -31,7 +31,4 @@ public class User
 
     [Column("usuario_data_cadastro", TypeName="Datetime")]
     public DateTime CreatedDate {get; set;}
-
-    [NotMapped]
-    public List<Post> Posts;
 }

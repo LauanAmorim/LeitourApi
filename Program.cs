@@ -15,12 +15,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<BookApiRepository>();
 
 string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine(connection);
+
 builder.Services.AddDbContext<LeitourContext>(options =>
     options.UseMySql(connection,ServerVersion.AutoDetect(connection))
 );

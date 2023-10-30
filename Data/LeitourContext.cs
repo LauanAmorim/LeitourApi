@@ -41,12 +41,18 @@ namespace LeitourApi.Data
               .Entity<Comment>()
               .ToView(CommentRepository.VIEW_COMMENT)
               .HasKey(t => t.CommentId);
+
+              modelBuilder
+              .Entity<User>()
+              .ToView(UserRepository.VIEW_USER)
+              .HasKey(t => t.Id);
            
             modelBuilder.Entity<Comment>().Property(e => e.UserName)
             .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
             modelBuilder.Entity<Comment>().Property(e => e.UserName)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
-
         }
+
+     //   private void()
     }
 }

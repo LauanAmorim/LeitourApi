@@ -6,6 +6,7 @@ using LeitourApi.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
 
+
 namespace LeitourApi.Controllers;
 
 [ApiController]
@@ -22,6 +23,13 @@ public class UserController : ControllerBase
         message = new Message("Usuário", "o");
     }
 
+    [HttpGet("criptografar/{message}")]
+    public async Task<IActionResult> Criptografar(string message)
+    {
+        string criptografado = Cryptography.Criptografar(message);
+        return Ok(criptografado);
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetUsers([FromQuery(Name = Constants.OFFSET)] int page) => await uow.UserRepository.GetAll(page);
 
@@ -35,11 +43,12 @@ public class UserController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<dynamic>> AddUser([FromBody] User newUser)
     {
-        User? registeredUser = await uow.UserRepository.GetByCondition(u => u.Email == newUser.Email);
+        User? registeredUser = await uow.UserRepository.GetByEmail(newUser.Email);
         if (registeredUser != null)
             return message.MsgAlreadyExists();
-        uow.UserRepository.Add(newUser);
-        User? loggingUser = await uow.UserRepository.GetById(newUser.Id);
+        newUser.Password = Hash.GerarHash(newUser.Password);
+        await uow.UserRepository.Add(newUser);
+        User? loggingUser = await uow.UserRepository.GetUser(newUser.Id);
         string token = TokenService.GenerateToken(loggingUser);
         return new { user = loggingUser, token };
     }
@@ -47,12 +56,12 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<dynamic>> Authenticate([FromBody] User loggingUser)
     {
-        User? registeredUser = await uow.UserRepository.GetByCondition(u => u.Email == loggingUser.Email);
+        User? registeredUser = await uow.UserRepository.GetByEmail(loggingUser.Email);
         if (registeredUser == null)
             return message.MsgNotFound();
         if(await uow.UserRepository.IsDeactivated(registeredUser.Id))
             return message.MsgDeactivate();
-        if (loggingUser.Password != registeredUser.Password)
+        if (Hash.GerarHash(loggingUser.Password) != registeredUser.Password)
             return message.MsgWrongPassword();
         string token = TokenService.GenerateToken(registeredUser);
         return new { user = registeredUser, token };
@@ -61,7 +70,7 @@ public class UserController : ControllerBase
     [HttpGet("email/{email}")]
     public async Task<ActionResult<User>> GetUserByEmail(string email)
     {
-        User? user = await uow.UserRepository.GetByCondition(u => u.Email == email);
+        User? user = await uow.UserRepository.GetByEmail(email);
         return (user != null) ? user : message.MsgNotFound();
     }
 
@@ -69,14 +78,14 @@ public class UserController : ControllerBase
     public async Task<IActionResult> PutUser([FromHeader] string token, [FromBody] User user)
     {
         int id = TokenService.DecodeToken(token);
-        var registeredUser = await uow.UserRepository.GetById(user.Id);
+        var registeredUser = await uow.UserRepository.GetUser(user.Id);
         if (registeredUser == null)
             return message.MsgNotFound();
         if(await uow.UserRepository.IsDeactivated(user.Id))
             return message.MsgDeactivate();
         if(registeredUser.Id != id)
             return message.MsgInvalid();
-        uow.UserRepository.Update(user);
+        await uow.UserRepository.Update(user);
         return message.MsgAlterated();
     }
 
@@ -84,13 +93,13 @@ public class UserController : ControllerBase
     public async Task<IActionResult> DeactivateUser([FromHeader] string token)
     {
         int id = TokenService.DecodeToken(token);
-        User? user = await uow.UserRepository.GetById(id);
+        User? user = await uow.UserRepository.GetUser(id);
         if (user == null)
             return message.MsgNotFound();
         if(await uow.UserRepository.IsDeactivated(user.Id))
             return message.MsgDeactivate();
         user.Access = "Desativado";
-        uow.UserRepository.Update(user);
+        await uow.UserRepository.Update(user);
         return Ok($"{user.NameUser} foi desativado");
     }
 }

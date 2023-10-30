@@ -13,13 +13,12 @@ namespace LeitourApi.Controllers
     {
         private readonly Message _message;
         private readonly IUnitOfWork uow;
-        private readonly IPostRepository postRepository;
+       
         public const string offset = "offset";
 
-        public PostsController(IUnitOfWork unitOfWork,IPostRepository Ipost)
+        public PostsController(IUnitOfWork unitOfWork)
         {
             uow = unitOfWork;
-            postRepository = Ipost;
             _message = new Message("Post", "o");
         }
 

@@ -43,7 +43,10 @@ create table tbl_livro_salvo(
     fk_usuario_id int not null,
     foreign key(fk_usuario_id) references tbl_usuario(pk_usuario_id),
     livro_salvo_chave_livro varchar(25) not null,
-    livro_salvo_publico tinyint not null default 0
+    livro_salvo_publico tinyint not null default 0,
+    livro_salvo_capa varchar(100) not null,
+    livro_salvo_titulo varchar(50) not null
+
 );
 
 
@@ -203,3 +206,11 @@ SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,
     where tbl_usuario.pk_usuario_id = tbl_publicacao.fk_usuario_id;
 //
 delimiter ;
+
+
+delimiter //
+create view vw_usuario as
+SELECT pk_usuario_id,usuario_nome,usuario_email,usuario_data_cadastro,usuario_foto_perfil FROM tbl_usuario;
+//
+delimiter ;
+

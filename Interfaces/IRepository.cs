@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using LeitourApi.Models;
 namespace LeitourApi.Interfaces;
 public interface IRepository<T> where T : class{
         Task<T?> GetById(int id);
@@ -13,11 +14,9 @@ public interface IRepository<T> where T : class{
         Task<T?> GetFromProcedure(string procedure, string param);
         Task<List<T>> GetAllFromProcedure(string procedure,int offset);
         Task<List<T>> GetAllFromProcedure(string procedure, string param,int offset);
-        Task<List<T>> GetFromView(string view,int offset);
-        Task<List<T>> GetFromView(string view, string param,int offset);
-        void Add(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        Task Add(T entity);
+        Task Update(T entity);
+        Task Delete(T entity);
         Task<bool> IsDeactivated(int id);
         int Count();
 }

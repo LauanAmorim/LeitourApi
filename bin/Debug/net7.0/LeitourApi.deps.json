@@ -14,6 +14,7 @@
           "Newtonsoft.Json": "13.0.3",
           "NuGet.ProjectModel": "6.7.0",
           "Pomelo.EntityFrameworkCore.MySql": "7.0.0",
+          "StructureMap.MVC4": "3.0.2.115",
           "Swashbuckle.AspNetCore": "6.5.0",
           "System.IdentityModel.Tokens.Jwt": "7.0.1"
         },
@@ -21,11 +22,57 @@
           "LeitourApi.dll": {}
         }
       },
+      "CommonServiceLocator/1.0.0": {
+        "runtime": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "runtime": {
           "lib/net6.0/Humanizer.dll": {
             "assemblyVersion": "2.14.0.0",
             "fileVersion": "2.14.1.48190"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi/5.1.2": {
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.WebHost": "5.1.2"
+        }
+      },
+      "Microsoft.AspNet.WebApi.Client/5.1.2": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3"
+        },
+        "runtime": {
+          "lib/net45/System.Net.Http.Formatting.dll": {
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.20129.0"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi.Core/5.1.2": {
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.1.2"
+        },
+        "runtime": {
+          "lib/net45/System.Web.Http.dll": {
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.20129.0"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi.WebHost/5.1.2": {
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Core": "5.1.2"
+        },
+        "runtime": {
+          "lib/net45/System.Web.Http.WebHost.dll": {
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.20129.0"
           }
         }
       },
@@ -204,6 +251,14 @@
           }
         }
       },
+      "Microsoft.Web.Infrastructure/1.0.0": {
+        "runtime": {
+          "lib/net40/Microsoft.Web.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.20105.407"
+          }
+        }
+      },
       "Mono.TextTemplating/2.2.1": {
         "dependencies": {
           "System.CodeDom": "4.4.0"
@@ -343,6 +398,26 @@
           }
         }
       },
+      "structuremap/3.0.2.115": {
+        "runtime": {
+          "lib/net40/StructureMap.Net4.dll": {
+            "assemblyVersion": "3.0.2.0",
+            "fileVersion": "3.0.2.115"
+          },
+          "lib/net40/StructureMap.dll": {
+            "assemblyVersion": "3.0.2.0",
+            "fileVersion": "3.0.2.115"
+          }
+        }
+      },
+      "StructureMap.MVC4/3.0.2.115": {
+        "dependencies": {
+          "CommonServiceLocator": "1.0.0",
+          "Microsoft.AspNet.WebApi": "5.1.2",
+          "WebActivator": "1.5.1",
+          "structuremap": "3.0.2.115"
+        }
+      },
       "Swashbuckle.AspNetCore/6.5.0": {
         "dependencies": {
           "Microsoft.Extensions.ApiDescription.Server": "6.0.5",
@@ -428,6 +503,17 @@
         "dependencies": {
           "System.Text.Encodings.Web": "7.0.0"
         }
+      },
+      "WebActivator/1.5.1": {
+        "dependencies": {
+          "Microsoft.Web.Infrastructure": "1.0.0"
+        },
+        "runtime": {
+          "lib/net40/WebActivator.dll": {
+            "assemblyVersion": "1.5.1.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
       }
     }
   },
@@ -437,12 +523,47 @@
       "serviceable": false,
       "sha512": ""
     },
+    "CommonServiceLocator/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RJjv0yxm+Fk/ak/CVMTGr0ng7g/nudkVYos4eQrIDpth3BdE1j7J2ddRm8FXtOoIZbgDqTU6hKq5zoackwL3HQ==",
+      "path": "commonservicelocator/1.0.0",
+      "hashPath": "commonservicelocator.1.0.0.nupkg.sha512"
+    },
     "Humanizer.Core/2.14.1": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
+    },
+    "Microsoft.AspNet.WebApi/5.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ZWNQr9qODEIw5+SIRj4WTkIlkaEzpV1EUZ/AqMrHhG99ZPMPV4Vo3Et9oT8wn4ZULIhyTwvzuu3go4itPyOIBA==",
+      "path": "microsoft.aspnet.webapi/5.1.2",
+      "hashPath": "microsoft.aspnet.webapi.5.1.2.nupkg.sha512"
+    },
+    "Microsoft.AspNet.WebApi.Client/5.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FbdEM+0G9GBprGuHMBbgfCg1oA6+Ew8tAtiTcEiLIrDXM2C44zzabGW4pXHDjBTswe0HgIWAynTv3IL2oP11NQ==",
+      "path": "microsoft.aspnet.webapi.client/5.1.2",
+      "hashPath": "microsoft.aspnet.webapi.client.5.1.2.nupkg.sha512"
+    },
+    "Microsoft.AspNet.WebApi.Core/5.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7KRMgOtv34xmJwheQQ9zv5syahBVjaMEAuX2ywnK86ysyLeebhb5IGKOzLptflRR/tDUG49RYgwbA6aR/U8T5Q==",
+      "path": "microsoft.aspnet.webapi.core/5.1.2",
+      "hashPath": "microsoft.aspnet.webapi.core.5.1.2.nupkg.sha512"
+    },
+    "Microsoft.AspNet.WebApi.WebHost/5.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eJ02ZpSy7YB/ehVXkCADKdK1T1hZVcioPKos2DlWj3eCJS8Jaf7tzuIIoouGocNYMAwCjN8XQap5DL7aBj3R1g==",
+      "path": "microsoft.aspnet.webapi.webhost/5.1.2",
+      "hashPath": "microsoft.aspnet.webapi.webhost.5.1.2.nupkg.sha512"
     },
     "Microsoft.AspNetCore.OpenApi/7.0.11": {
       "type": "package",
@@ -605,6 +726,13 @@
       "path": "microsoft.openapi/1.4.3",
       "hashPath": "microsoft.openapi.1.4.3.nupkg.sha512"
     },
+    "Microsoft.Web.Infrastructure/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FNmvLn5m2LTU/Rs2KWVo0SIIh9Ek+U0ojex7xeDaSHw/zgEP77A8vY5cVWgUtBGS8MJfDGNn8rpXJWEIQaPwTg==",
+      "path": "microsoft.web.infrastructure/1.0.0",
+      "hashPath": "microsoft.web.infrastructure.1.0.0.nupkg.sha512"
+    },
     "Mono.TextTemplating/2.2.1": {
       "type": "package",
       "serviceable": true,
@@ -696,6 +824,20 @@
       "path": "pomelo.entityframeworkcore.mysql/7.0.0",
       "hashPath": "pomelo.entityframeworkcore.mysql.7.0.0.nupkg.sha512"
     },
+    "structuremap/3.0.2.115": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hTE+VBC3v/4aXxY6oikEisT0XKqxmA6rkyxGtgBDtPH6iUVTJEXqT7sj61CxyyWLq9NQf/5Tdl7p221IdnGC+w==",
+      "path": "structuremap/3.0.2.115",
+      "hashPath": "structuremap.3.0.2.115.nupkg.sha512"
+    },
+    "StructureMap.MVC4/3.0.2.115": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bDDCSNXD/Kf3COHPC//n5bepw5nTY98Df35gMM+NmMPFtu6TP71/VLAC0OuDPKZfxshm93TFtdXi4SwCIeFnJQ==",
+      "path": "structuremap.mvc4/3.0.2.115",
+      "hashPath": "structuremap.mvc4.3.0.2.115.nupkg.sha512"
+    },
     "Swashbuckle.AspNetCore/6.5.0": {
       "type": "package",
       "serviceable": true,
@@ -772,6 +914,13 @@
       "sha512": "sha512-DaGSsVqKsn/ia6RG8frjwmJonfos0srquhw09TlT8KRw5I43E+4gs+/bZj4K0vShJ5H9imCuXupb4RmS+dBy3w==",
       "path": "system.text.json/7.0.0",
       "hashPath": "system.text.json.7.0.0.nupkg.sha512"
+    },
+    "WebActivator/1.5.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zbGGwvL/bwlNL8gAyDKVjYLNGz6NnYnjLV7FOHaXUXssgtSyidczl4gnbZ34bvFxAcq53/4WDc+HEfRLkMKIlg==",
+      "path": "webactivator/1.5.1",
+      "hashPath": "webactivator.1.5.1.nupkg.sha512"
     }
   }
 }

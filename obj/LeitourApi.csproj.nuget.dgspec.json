@@ -64,6 +64,10 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "StructureMap.MVC4": {
+              "target": "Package",
+              "version": "[3.0.2.115, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
@@ -92,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/7.0.111/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/7.0.113/RuntimeIdentifierGraph.json"
         }
       }
     }

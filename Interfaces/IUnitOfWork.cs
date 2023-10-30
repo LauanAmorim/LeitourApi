@@ -3,8 +3,8 @@ namespace LeitourApi.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<User> UserRepository { get; }
-        IRepository<Post> PostRepository { get; }
+        IUserRepository UserRepository { get; }
+        IPostRepository PostRepository { get; }
         IRepository<Comment> CommentRepository { get; }
         IRepository<Annotation> AnnotationRepository { get; }
         IRepository<SavedBook> SavedRepository { get; }
