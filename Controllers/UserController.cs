@@ -3,7 +3,6 @@ using LeitourApi.Models;
 using LeitourApi.Repository;
 using LeitourApi.Interfaces;
 using LeitourApi.Data;
-using LeitourApi.Utils;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
 
