@@ -23,16 +23,16 @@ public class UserRepository : Repository<User>, IUserRepository
         await dbSet.ToListAsync();
 
     public virtual async Task<User?> GetUser(int id) => 
-        await dbSet.FromSql($"EXECUTE sp_usuario({id})").FirstOrDefaultAsync();
+        await dbSet.FromSql($"select * from tbl_usuario where pk_usuario_id = {id}").FirstOrDefaultAsync();
 
     public virtual async Task<User?> GetByEmail(string email) => 
         await dbSet.FromSql($"select * from tbl_usuario where usuario_email = {email}").FirstOrDefaultAsync();
     
 
     public virtual async Task<List<User>?> GetFollowers(int id) => 
-        await dbSet.FromSql($"EXECUTE sp_select_seguidor_seguidores({id})").ToListAsync();
+        await dbSet.FromSql($"call sp_select_seguidor_seguidores({id});").ToListAsync();
     
     public virtual async Task<List<User>?> GetFollowing(string email) => 
-        await dbSet.FromSql($"EXECUTE sp_select_seguidor_seguintes({email})").ToListAsync();
+        await dbSet.FromSql($"call sp_select_seguidor_seguintes({email});").ToListAsync();
 
 }

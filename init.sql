@@ -208,9 +208,18 @@ SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,
 delimiter ;
 
 
+
 delimiter //
 create view vw_usuario as
-SELECT pk_usuario_id,usuario_nome,usuario_email,usuario_data_cadastro,usuario_foto_perfil FROM tbl_usuario;
+SELECT pk_usuario_id,usuario_nome,usuario_email,"" as usuario_senha,"" as usuario_acesso,usuario_data_cadastro,usuario_foto_perfil FROM tbl_usuario;
 //
 delimiter ;
 
+delimiter $$
+Create procedure sp_usuario(in vIdUser int)
+begin
+	select * from tbl_usuario where pk_usuario_id = vIdUser;
+end $$
+delimiter ;
+
+call sp_usuario(1);
