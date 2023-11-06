@@ -31,22 +31,22 @@ public class Repository<T> : IRepository<T> where T : class
         await dbSet.Where(predicate).Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
 
 
-    public async Task Add(T entity)
+    public void Add(T entity)
     {
-        _ = await dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
+        dbSet.Add(entity);
+        _context.SaveChanges();
     }
 
-    public async Task Update(T entity)
+    public void Update(T entity)
     {
         dbSet.Entry(entity).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
     }
 
-    public async Task Delete(T entity)
+    public void Delete(T entity)
     {
         dbSet.Remove(entity);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
     }
 
     public async Task<bool> IsDeactivated(int id)

@@ -55,6 +55,7 @@ namespace LeitourApi.Controllers
         {
             if (TokenService.DecodeToken(token) != post.UserId)
                 return _message.MsgInvalid();
+            post.AlteratedDate = DateTime.UtcNow;
             uow.PostRepository.Add(post);
             return CreatedAtAction("GetPost", new { id = post.Id }, post);
         }
@@ -68,6 +69,7 @@ namespace LeitourApi.Controllers
                 return _message.MsgNotFound();
             if (id != updatePost.Id || TokenService.DecodeToken(token) != updatePost.UserId)
                 return _message.MsgInvalid();
+            updatePost.AlteratedDate = DateTime.UtcNow;
             uow.PostRepository.Update(updatePost);
             return _message.MsgAlterated();
         }

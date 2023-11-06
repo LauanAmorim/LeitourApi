@@ -40,19 +40,24 @@ public class BookApiRepository
         return jsonObject;
     }
 
-    public Task<List<BookApi>> FormatResponse(JObject response)
+    public List<BookApi>? FormatResponse(JObject response)
     {
         List<BookApi> Books = new();
         try
         {
-            JArray jArray = (JArray)response["items"];
+            JArray? jArray = (JArray?)response["items"];
+            if(jArray == null)
+                return null;
             foreach (JObject jsonItems in jArray.Cast<JObject>())
             {
                 BookApi book = new();
 
                 book.Key = GetStringValue(jsonItems, "id");
 
-                JObject jsonInfo = (JObject)jsonItems["volumeInfo"];
+                JObject? jsonInfo = (JObject?)jsonItems["volumeInfo"];
+                if(jsonInfo == null)
+
+                    continue;
 
                 book.Title = GetStringValue(jsonInfo, "title");
                 book.Authors = GetStringFromArrayValue(jsonInfo, "authors");
@@ -61,8 +66,8 @@ public class BookApiRepository
                 book.Description = GetStringValue(jsonInfo, "description");
                 book.Language = GetStringValue(jsonInfo, "language");
                 book.Pages = GetIntValue(jsonInfo, "pageCount");
-                JObject jsonImage = (JObject)jsonInfo["imageLinks"];
-                book.Cover = GetStringValue(jsonImage, "thumbnail").Replace("zoom=1","zoom=0");
+                JObject? jsonImage = (JObject?) jsonInfo["imageLinks"];
+                book.Cover = (jsonImage != null) ? GetStringValue(jsonImage, "thumbnail").Replace("zoom=1","zoom=0") : "";
                 book.ISBN_10 = "";
                 book.ISBN_13 = "";
 
@@ -78,14 +83,15 @@ public class BookApiRepository
             }
         }
         catch (Exception) { }
-        return Task.FromResult(Books);
+        return Books;
     }
 
-    private string GetStringValue(JObject json, string key)
+    private string GetStringValue(JObject? json, string key)
     {
          try { return json[key].ToString(); }
         catch { return ""; }
     }
+
     private string GetStringFromArrayValue(JObject json, string key)
     {
         try
@@ -95,6 +101,7 @@ public class BookApiRepository
         }
         catch { return ""; }
     }
+
     private int GetIntValue(JObject json, string key)
     {
         try { return (int)json[key]; }

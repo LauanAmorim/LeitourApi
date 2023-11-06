@@ -41,17 +41,18 @@ namespace LeitourApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment([FromHeader] string token, Comment Comment)
+        public async Task<ActionResult<Comment>> PostComment([FromHeader] string token, Comment comment)
         {
             User? user = await uow.UserRepository.GetById(TokenService.DecodeToken(token));
             if(user == null)
                 return new Message("Usuari","o").MsgNotFound();
-            if (user.Id != Comment.UserId)
+            if (user.Id != comment.UserId)
                 return _message.MsgInvalid();
             if (user.Access == "Desativado")
                 return _message.MsgDeactivate();
-            uow.CommentRepository.Add(Comment);
-            return CreatedAtAction("PostComment", Comment);
+            comment.PostDate = DateTime.UtcNow;
+            uow.CommentRepository.Add(comment);
+            return CreatedAtAction("PostComment", comment);
         }
 
 
@@ -63,12 +64,12 @@ namespace LeitourApi.Controllers
                 return new Message("Usuari","o").MsgNotFound();
             if (user.Access == "Desativado")
                 return _message.MsgDeactivate();
-
             var Comment = await uow.CommentRepository.GetById(id);
             if (Comment == null) 
                 return _message.MsgNotFound();
             if (id != updateComment.CommentId || TokenService.DecodeToken(token) != updateComment.UserId)
                 return _message.MsgInvalid();
+            updateComment.AlteratedDate = DateTime.UtcNow;
             uow.CommentRepository.Update(updateComment);
             return _message.MsgCreated() ;
         }

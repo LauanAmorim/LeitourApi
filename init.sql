@@ -20,7 +20,7 @@ CREATE TABLE tbl_publicacao (
     fk_usuario_id INT not null,
     FOREIGN KEY (fk_usuario_id) REFERENCES tbl_usuario(pk_usuario_id),
     publicacao_texto VARCHAR(250) not null,
-    publicacao_data_criacao DATETIME default current_timestamp,
+    publicacao_data_criacao not null DATETIME default current_timestamp,
     publicacao_data_alteracao date
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE tbl_comentario (
     fk_publicacao_id INT not null,
     FOREIGN KEY (fk_publicacao_id) REFERENCES tbl_publicacao(pk_publicacao_id),
     comentario_texto VARCHAR(250) not null,
-    comentario_data_criacao  DATETIME default current_timestamp,
+    comentario_data_criacao  not null DATETIME default current_timestamp,
     comentario_data_alteracao date
 );
 

@@ -14,9 +14,9 @@ public interface IRepository<T> where T : class{
         Task<T?> GetFromProcedure(string procedure, string param);
         Task<List<T>> GetAllFromProcedure(string procedure,int offset);
         Task<List<T>> GetAllFromProcedure(string procedure, string param,int offset);
-        Task Add(T entity);
-        Task Update(T entity);
-        Task Delete(T entity);
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(T entity);
         Task<bool> IsDeactivated(int id);
         int Count();
 }

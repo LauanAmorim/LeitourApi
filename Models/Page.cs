@@ -18,7 +18,7 @@ public partial class Page
 
     public DateTime CreatedDate { get; set; }
 
-    public DateTime? AlteratedDate { get; set; }
+    public DateTime AlteratedDate { get; set; }
 
     public bool ActivePage {get; set;}
 }

@@ -47,9 +47,10 @@ public class UserController : ControllerBase
         if (registeredUser != null)
             return message.MsgAlreadyExists();
         newUser.Password = Hash.GerarHash(newUser.Password);
-        await uow.UserRepository.Add(newUser);
+        uow.UserRepository.Add(newUser);
         User? loggingUser = await uow.UserRepository.GetUser(newUser.Id);
         string token = TokenService.GenerateToken(loggingUser);
+        loggingUser.Password = newUser.Password;
         return new { user = loggingUser, token };
     }
 
@@ -65,6 +66,20 @@ public class UserController : ControllerBase
         if (Hash.GerarHash(loggingUser.Password) != registeredUser.Password)
             return message.MsgWrongPassword();
         string token = TokenService.GenerateToken(registeredUser);
+        registeredUser.Password = loggingUser.Password;
+        return new { user = registeredUser, token };
+    }
+    [HttpPost("autologin")]
+    public async Task<ActionResult<dynamic>> AutoLogin([FromHeader] string token)
+    {
+        int id = TokenService.DecodeToken(token);
+        var registeredUser = await uow.UserRepository.GetUser(id);
+        if (registeredUser == null)
+            return message.MsgNotFound();
+        if(await uow.UserRepository.IsDeactivated(id))
+            return message.MsgDeactivate();
+        if(registeredUser.Id != id)
+            return message.MsgInvalid();
         return new { user = registeredUser, token };
     }
 
@@ -86,7 +101,7 @@ public class UserController : ControllerBase
             return message.MsgDeactivate();
         if(registeredUser.Id != id)
             return message.MsgInvalid();
-        await uow.UserRepository.Update(user);
+        uow.UserRepository.Update(user);
         return message.MsgAlterated();
     }
 
@@ -100,7 +115,7 @@ public class UserController : ControllerBase
         if(await uow.UserRepository.IsDeactivated(user.Id))
             return message.MsgDeactivate();
         user.Access = "Desativado";
-        await uow.UserRepository.Update(user);
+        uow.UserRepository.Update(user);
         return Ok($"{user.NameUser} foi desativado");
     }
 }
