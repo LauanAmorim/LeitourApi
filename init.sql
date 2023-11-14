@@ -20,7 +20,7 @@ CREATE TABLE tbl_publicacao (
     fk_usuario_id INT not null,
     FOREIGN KEY (fk_usuario_id) REFERENCES tbl_usuario(pk_usuario_id),
     publicacao_texto VARCHAR(250) not null,
-    publicacao_data_criacao not null DATETIME default current_timestamp,
+    publicacao_data_criacao DATETIME not null default current_timestamp,
     publicacao_data_alteracao date
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE tbl_comentario (
     fk_publicacao_id INT not null,
     FOREIGN KEY (fk_publicacao_id) REFERENCES tbl_publicacao(pk_publicacao_id),
     comentario_texto VARCHAR(250) not null,
-    comentario_data_criacao  not null DATETIME default current_timestamp,
+    comentario_data_criacao DATETIME not null default current_timestamp,
     comentario_data_alteracao date
 );
 
@@ -44,7 +44,7 @@ create table tbl_livro_salvo(
     foreign key(fk_usuario_id) references tbl_usuario(pk_usuario_id),
     livro_salvo_chave_livro varchar(25) not null,
     livro_salvo_publico tinyint not null default 0,
-    livro_salvo_capa varchar(100) not null,
+    livro_salvo_capa varchar(300) not null,
     livro_salvo_titulo varchar(50) not null
 
 );
@@ -112,16 +112,18 @@ delimiter ;
 delimiter $$
 Create procedure sp_like(in vIdUser int, in vIdPublicacao int)
 begin
-	insert into tbl_like(fk_usuario_id,fk_publicacao_id) values (vIdUser,vIdPublicacao);
+		insert into tbl_like(fk_usuario_id,fk_publicacao_id) values (vIdUser,vIdPublicacao);
 end $$
 delimiter ;
 
 delimiter $$
 Create procedure sp_deslike(in vIdUser int, in vIdPublicacao int)
 begin
-	delete from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao;
+		delete from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao;
 end $$
 delimiter ;
+
+
 
 
 -- Deletar comentários juntos com a publicacao
@@ -222,4 +224,4 @@ begin
 end $$
 delimiter ;
 
-call sp_usuario(1);
+call sp_like(1,1);

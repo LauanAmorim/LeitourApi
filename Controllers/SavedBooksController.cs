@@ -16,7 +16,7 @@ public class SavedBooksController : ControllerBase
     public SavedBooksController(IUnitOfWork unitOfWork)
     {
         uow = unitOfWork;
-        message = new Message("Usuário", "o");
+        message = new Message("Livro", "o");
     }
 
     [HttpGet]

@@ -41,7 +41,7 @@ namespace LeitourApi.Controllers
                 return mesage.MsgNotReturned();
             if((int?) response["Code"]  == StatusCodes.Status404NotFound)
                 return mesage.MsgNotFound();
-            List<BookApi> books = _bookApi.FormatResponse(response);
+            List<BookApi> books = await _bookApi.FormatResponse(response);
             return books;
         }
 
@@ -54,7 +54,7 @@ namespace LeitourApi.Controllers
                 return mesage.MsgNotReturned();
             if((int?) response["Code"]  == StatusCodes.Status404NotFound)
                 return mesage.MsgNotFound();
-            BookApi book = ( _bookApi.FormatResponse(response))[0];
+            BookApi book = ( await _bookApi.FormatResponse(response))[0];
             return book;
         }
         [HttpGet("author/{author}")]
@@ -66,7 +66,7 @@ namespace LeitourApi.Controllers
                 return mesage.MsgNotReturned();
             if((int?) response["Code"]  == StatusCodes.Status404NotFound)
                 return mesage.MsgNotFound();
-            List<BookApi> books =  _bookApi.FormatResponse(response);
+            List<BookApi> books = await _bookApi.FormatResponse(response);
             return books;
         }
         [HttpGet("key/{key}")]
@@ -78,7 +78,7 @@ namespace LeitourApi.Controllers
                 return mesage.MsgNotReturned();
             if((int?) response["Code"]  == StatusCodes.Status404NotFound)
                 return mesage.MsgNotFound();
-            BookApi book = ( _bookApi.FormatResponse(response))[0];
+            BookApi book = (await _bookApi.FormatResponse(response))[0];
             return book;
         }
     }
