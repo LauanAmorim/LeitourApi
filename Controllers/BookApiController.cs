@@ -21,7 +21,8 @@ namespace LeitourApi.Controllers
     {
 
       
-        private static string API_PARAMS = "&maxResults=20&key=AIzaSyAz_H70Ju10k16gGDt-V-wQnYll-q7q7LY&startIndex=";
+       // private static string API_PARAMS = "&maxResults=20&key=AIzaSyAz_H70Ju10k16gGDt-V-wQnYll-q7q7LY&startIndex=";
+        private static string API_PARAMS = "&maxResults=20&startIndex=";
         private static string API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
         public readonly BookApiRepository _bookApi;
@@ -69,7 +70,7 @@ namespace LeitourApi.Controllers
             List<BookApi> books = await _bookApi.FormatResponse(response);
             return books;
         }
-        [HttpGet("key/{key}")]
+        [HttpGet("Key/{key}")]
         public async Task<ActionResult<BookApi>?> GetByKey(string key)
         {
             Uri url = new($"https://www.googleapis.com/books/v1/volumes/{key}");

@@ -21,4 +21,7 @@ public class PostRepository : Repository<Post>, IPostRepository
 
     public override async Task<List<Post>?> GetAll(int offset) => 
         await dbSet.ToListAsync();//.FromSql($"SELECT * from {POST_VIEW_GET_POST}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
+
+    public async Task<int> Like(int userId, int postId) => 
+       await _context.Database.SqlQuery<int>($"call sp_like({userId},{postId});").SingleAsync();
 }

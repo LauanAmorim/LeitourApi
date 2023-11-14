@@ -111,20 +111,26 @@ delimiter ;
 
 delimiter $$
 Create procedure sp_like(in vIdUser int, in vIdPublicacao int)
-begin
+sp_verificar_like: begin
+	SET @usuario := (select pk_usuario_id from tbl_usuario where pk_usuario_id = vIdUser);
+    if(@usuario is null)then
+		select -1;
+		leave sp_verificar_like;
+    end if;
+	SET @publicacao := (select pk_publicacao_id from tbl_publicacao where pk_publicacao_id = vIdPublicacao);
+    if(@publicacao is null)then
+		select -1;
+		leave sp_verificar_like;
+    end if;
+    set @likes := (select count(*) from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao);
+	if(select @likes = 0)then
 		insert into tbl_like(fk_usuario_id,fk_publicacao_id) values (vIdUser,vIdPublicacao);
+	else
+		delete from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao;        
+	end if;
+    select (@likes = 0);
 end $$
 delimiter ;
-
-delimiter $$
-Create procedure sp_deslike(in vIdUser int, in vIdPublicacao int)
-begin
-		delete from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao;
-end $$
-delimiter ;
-
-
-
 
 -- Deletar comentários juntos com a publicacao
 DELIMITER $$
@@ -224,4 +230,9 @@ begin
 end $$
 delimiter ;
 
+insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(1,'Tesytando');
+insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(3,'Tesytando');
+
+select * from tbl_publicacao;
 call sp_like(1,1);
+select * from tbl_like;

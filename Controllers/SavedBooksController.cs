@@ -39,10 +39,17 @@ public class SavedBooksController : ControllerBase
         return (saved != null) ? saved : message.MsgNotFound();
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<SavedBook>> GetSaved(int id)
+
+    [HttpGet("{key}")]
+    public async Task<ActionResult<SavedBook>> GetSaved(string key,[FromHeader] string token)
     {
-        var saved = await uow.SavedRepository.GetById(id);
+        int userId = TokenService.DecodeToken(token);
+        User? user = await uow.UserRepository.GetById(userId);
+        if(user == null)
+            return message.MsgNotFound();
+        if(user.Access == "Desativado")
+            return message.MsgDeactivate();
+        SavedBook saved = await uow.SavedRepository.GetByCondition(s => s.UserId == user.Id && s.BookKey == key);
         return (saved != null) ? saved : message.MsgNotFound();
     }
 

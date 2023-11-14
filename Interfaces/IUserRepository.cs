@@ -9,4 +9,8 @@ public interface IUserRepository : IRepository<User>
   Task<User?> GetUser(int id);
   Task<User?> GetByEmail(string email);
   Task<List<User>?> GetByUsername(int offset,string name);
+  Task Follow(int id,string email);
+  Task Unfollow(int id,string email);
+  Task<List<User>?> GetFollowers(int id);
+  Task<List<User>?> GetFollowing(string email);
 }

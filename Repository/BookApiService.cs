@@ -40,6 +40,28 @@ public class BookApiRepository
         return jsonObject;
     }
 
+    public async Task<JObject> HttpGetOne(Uri url)
+    {
+        JObject jsonObject = new();
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                jsonObject = JObject.Parse(jsonResponse);
+                if (jsonObject == null)
+                    jsonObject["Code"] = StatusCodes.Status404NotFound;
+                else
+                    jsonObject["Code"] = StatusCodes.Status200OK;
+            }
+            else
+                jsonObject["Code"] = StatusCodes.Status500InternalServerError;
+        }
+        catch (Exception) { jsonObject["Code"] = StatusCodes.Status500InternalServerError; }
+        return jsonObject;
+    }
+
     public Task<List<BookApi>> FormatResponse(JObject response)
     {
         List<BookApi> Books = new();

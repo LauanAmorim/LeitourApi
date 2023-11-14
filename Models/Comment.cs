@@ -26,7 +26,7 @@ public class Comment
     public required string MessagePost { get; set; } = null!;
 
     [Column("comentario_data_criacao", TypeName = "date")]
-    public DateTime? PostDate { get; set; }
+    public DateTime PostDate { get; set; }
 
     [Column("comentario_data_alteracao", TypeName = "date")]
     public DateTime? AlteratedDate { get; set; }

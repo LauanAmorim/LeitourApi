@@ -31,6 +31,12 @@ public class UserRepository : Repository<User>, IUserRepository
     public async Task<List<User>?> GetByUsername(int offset,string name) => 
         await dbSet.Where(u => u.NameUser.Contains(name)).ToListAsync();
     
+    public virtual async Task Follow(int id,string email) => 
+        await dbSet.FromSql($"call sp_select_seguidor_seguir({id},{email});").ToListAsync();
+
+    public virtual async Task Unfollow(int id,string email) => 
+        await dbSet.FromSql($"call sp_select_seguidor_desseguir({id},{email});").ToListAsync();   
+
     public virtual async Task<List<User>?> GetFollowers(int id) => 
         await dbSet.FromSql($"call sp_select_seguidor_seguidores({id});").ToListAsync();
     
