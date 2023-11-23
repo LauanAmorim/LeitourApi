@@ -20,7 +20,7 @@ CREATE TABLE tbl_publicacao (
     fk_usuario_id INT not null,
     FOREIGN KEY (fk_usuario_id) REFERENCES tbl_usuario(pk_usuario_id),
     publicacao_texto VARCHAR(250) not null,
-    publicacao_data_criacao DATETIME default current_timestamp not null,
+    publicacao_data_criacao DATETIME default current_timestamp,
     publicacao_data_alteracao date
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE tbl_comentario (
     fk_publicacao_id INT not null,
     FOREIGN KEY (fk_publicacao_id) REFERENCES tbl_publicacao(pk_publicacao_id),
     comentario_texto VARCHAR(250) not null,
-    comentario_data_criacao  DATETIME default current_timestamp not null,
+    comentario_data_criacao  DATETIME default current_timestamp,
     comentario_data_alteracao date
 );
 
@@ -44,11 +44,10 @@ create table tbl_livro_salvo(
     foreign key(fk_usuario_id) references tbl_usuario(pk_usuario_id),
     livro_salvo_chave_livro varchar(25) not null,
     livro_salvo_publico tinyint not null default 0,
-    livro_salvo_capa varchar(120) not null,
+    livro_salvo_capa varchar(100) not null,
     livro_salvo_titulo varchar(255) not null
 
 );
-
 
 -- Tabela anotacao
 
@@ -207,21 +206,26 @@ SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,
 //
 delimiter ;
 
-
+select * from vw_publicacao;
 
 delimiter //
 create view vw_usuario as
-SELECT pk_usuario_id,usuario_nome,usuario_email,"" as usuario_senha,"" as usuario_acesso,usuario_data_cadastro,usuario_foto_perfil FROM tbl_usuario;
+SELECT pk_usuario_id,usuario_nome,usuario_email,usuario_data_cadastro,usuario_foto_perfil FROM tbl_usuario;
 //
 delimiter ;
 
-delimiter $$
-Create procedure sp_usuario(in vIdUser int)
-begin
-	select * from tbl_usuario where pk_usuario_id = vIdUser;
-end $$
-delimiter ;
-
-call sp_usuario(1);
-
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Lucas','12345','Lucas@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Daniel','12345','Daniel@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Luiz','12345','Luiz@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_email,usuario_senha) values ("jose","jose@email.com","1234"),("maria","maria@email.com","4321");
+INSERT INTO tbl_usuario (usuario_nome, usuario_senha, usuario_email) VALUES ('Lauan', SHA2('lauan123', 256), 'Lauan@gmail.com');
 select * from tbl_usuario;
+call sp_seguidor_seguir(1,'Daniel@gmail.com');
+select * from tbl_seguidor;
+call sp_seguidor_desseguir(1,'Daniel@gmail.com');
+select * from tbl_seguidor;
+
+
+
+INSERT INTO tbl_usuario (usuario_nome, usuario_senha, usuario_email) VALUES ('Lauan22', SHA2('lauaN1232', 256), 'Lauan22@gmail.com');
+SELECT * FROM tbl_usuario WHERE usuario_email = 'lauan@gmail.com' AND usuario_senha = SHA2('lauan1232', 256);
