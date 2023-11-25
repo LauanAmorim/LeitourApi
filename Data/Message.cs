@@ -29,6 +29,7 @@ public class Message : ControllerBase
     public ActionResult MsgAlterated() => Ok($"{controller} foi {UPDATE}{artigo}");
     public ActionResult MsgDeleted() => Ok($"{controller} foi {DELETE}{artigo}");
     public ActionResult MsgDeactivate() => Ok($"O usuario foi desativado");
+    public ActionResult MsgDebug(string message) => Ok($"{message}");
 
     public ActionResult MsgPublic(bool isPublic)
     {

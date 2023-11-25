@@ -23,19 +23,19 @@ namespace LeitourApi.Controllers
             //   this.savedRepo = savedRepo;
         }
 
-        [HttpGet("api/savedBook/[controller]/{id}")]
+        [HttpGet("savedBook/{id}")]
         public async Task<ActionResult<List<Annotation>>>? GetUserAnnotations([FromHeader] string token, int id)
         {
             int Id = TokenService.DecodeToken(token);
             User? user = await uow.UserRepository.GetById(Id);
             if (user == null)
                 return message.MsgInvalid();
-            var annotation = await uow.AnnotationRepository.GetById(id);
+            SavedBook? saved = await uow.SavedRepository.GetById(id);
+            if (saved == null)// || (!saved.Public && saved.UserId != id))
+                return message.MsgDebug("Livro null");
+            var annotation = await uow.AnnotationRepository.GetAllByCondition(a => a.SavedBookId == saved.Id);
             if (annotation == null)
-                return message.MsgNotFound();
-            SavedBook saved = await uow.SavedRepository.GetById(annotation.SavedBookId);
-            if (!saved.Public && saved.UserId != id)
-                return message.NotFound();
+                return message.MsgDebug("Annotação nula");
             return Ok(annotation);
         }
 
@@ -55,7 +55,7 @@ namespace LeitourApi.Controllers
             return Ok(annotation);
         }
 
-        [HttpPost("api/savedBook/{id}")]
+        [HttpPost("savedBook/{id}")]
         public async Task<ActionResult<List<Annotation>>>? AddAnnotations([FromHeader] string token, int id, [FromBody] Annotation annotation)
         {
             int Id = TokenService.DecodeToken(token);

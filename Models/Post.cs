@@ -23,6 +23,10 @@ public class Post
     [Column("likes")]
     public int Likes { get; }
 
+
+    [Column("num_comentario")]
+    public int Comment_Number { get; }
+
     [Column("publicacao_data_criacao",TypeName = "date")]
     public required DateTime PostDate { get; set; }
     

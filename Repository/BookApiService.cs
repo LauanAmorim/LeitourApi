@@ -1,5 +1,3 @@
-
-
 using LeitourApi.Models;
 using System.Text.Json;
 using System;
@@ -28,9 +26,9 @@ public class BookApiRepository
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
                 jsonObject = JObject.Parse(jsonResponse);
-                if (jsonObject["items"].IsNullOrEmpty())
+               /* if (jsonObject["kind"].IsNullOrEmpty())
                     jsonObject["Code"] = StatusCodes.Status404NotFound;
-                else
+                else*/
                     jsonObject["Code"] = StatusCodes.Status200OK;
             }
             else
@@ -40,41 +38,20 @@ public class BookApiRepository
         return jsonObject;
     }
 
-    public async Task<JObject> HttpGetOne(Uri url)
-    {
-        JObject jsonObject = new();
-        try
-        {
-            HttpResponseMessage response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
-            {
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                jsonObject = JObject.Parse(jsonResponse);
-                if (jsonObject == null)
-                    jsonObject["Code"] = StatusCodes.Status404NotFound;
-                else
-                    jsonObject["Code"] = StatusCodes.Status200OK;
-            }
-            else
-                jsonObject["Code"] = StatusCodes.Status500InternalServerError;
-        }
-        catch (Exception) { jsonObject["Code"] = StatusCodes.Status500InternalServerError; }
-        return jsonObject;
-    }
-
-    public Task<List<BookApi>> FormatResponse(JObject response)
+    public List<BookApi>? FormatResponse(JObject response)
     {
         List<BookApi> Books = new();
         try
         {
-            JArray jArray = (JArray)response["items"];
+            JArray? jArray = (JArray?)response["items"];
+
             foreach (JObject jsonItems in jArray.Cast<JObject>())
             {
                 BookApi book = new();
 
                 book.Key = GetStringValue(jsonItems, "id");
 
-                JObject jsonInfo = (JObject)jsonItems["volumeInfo"];
+                JObject? jsonInfo = (JObject?)jsonItems["volumeInfo"];
 
                 book.Title = GetStringValue(jsonInfo, "title");
                 book.Authors = GetStringFromArrayValue(jsonInfo, "authors");
@@ -83,11 +60,19 @@ public class BookApiRepository
                 book.Description = GetStringValue(jsonInfo, "description");
                 book.Language = GetStringValue(jsonInfo, "language");
                 book.Pages = GetIntValue(jsonInfo, "pageCount");
-                JObject jsonImage = (JObject)jsonInfo["imageLinks"];
-                book.Cover = GetStringValue(jsonImage, "thumbnail").Replace("zoom=1","zoom=0");
+                JObject? jsonImage = (JObject?)jsonInfo["imageLinks"];
+                book.Cover = (jsonImage != null) ? GetStringValue(jsonImage, "thumbnail").Replace("zoom=1", "zoom=0") : "";
                 book.ISBN_10 = "";
                 book.ISBN_13 = "";
-
+                try
+                {
+                    string[]? categories = ((JArray)jsonInfo["categories"]).ValueAsArray<string>();
+                    book.Category = categories[0];
+                }
+                catch
+                {
+                    book.Category = null;
+                }
                 JObject[] jsonArray = jsonInfo["industryIdentifiers"].ValueAsArray<JObject>();
                 foreach (JObject jObj in jsonArray)
                 {
@@ -99,53 +84,63 @@ public class BookApiRepository
                 Books.Add(book);
             }
         }
-        catch (Exception) { }
-        return Task.FromResult(Books);
+        catch (Exception) { throw; }
+        return Books;
     }
 
-    public Task<BookApi> FormatOneResponse(JObject response)
+
+    public BookApi? FormatOneResponse(JObject response)
     {
+
+
         BookApi book = new();
+
+        book.Key = GetStringValue(response, "id");
+
+        JObject? jsonInfo = (JObject?)response["volumeInfo"];
+
+        book.Title = GetStringValue(jsonInfo, "title");
+        book.Authors = GetStringFromArrayValue(jsonInfo, "authors");
+        book.Publisher = GetStringValue(jsonInfo, "publisher");
+        book.PublishedDate = GetStringValue(jsonInfo, "publishedDate");
+        book.Description = GetStringValue(jsonInfo, "description");
+        book.Language = GetStringValue(jsonInfo, "language");
+        book.Pages = GetIntValue(jsonInfo, "pageCount");
+        JObject? jsonImage = (JObject?)jsonInfo["imageLinks"];
+        book.Cover = (jsonImage != null) ? GetStringValue(jsonImage, "thumbnail").Replace("zoom=1", "zoom=0") : "";
+        book.ISBN_10 = "";
+        book.ISBN_13 = "";
         try
         {
-                
-                JObject jsonItems = response;
-
-                book.Key = GetStringValue(jsonItems, "id");
-
-                JObject jsonInfo = (JObject)jsonItems["volumeInfo"];
-
-                book.Title = GetStringValue(jsonInfo, "title");
-                book.Authors = GetStringFromArrayValue(jsonInfo, "authors");
-                book.Publisher = GetStringValue(jsonInfo, "publisher");
-                book.PublishedDate = GetStringValue(jsonInfo, "publishedDate");
-                book.Description = GetStringValue(jsonInfo, "description");
-                book.Language = GetStringValue(jsonInfo, "language");
-                book.Pages = GetIntValue(jsonInfo, "pageCount");
-                JObject jsonImage = (JObject)jsonInfo["imageLinks"];
-                book.Cover = GetStringValue(jsonImage, "thumbnail").Replace("zoom=1","zoom=0");
-                book.ISBN_10 = "";
-                book.ISBN_13 = "";
-
-                JObject[] jsonArray = jsonInfo["industryIdentifiers"].ValueAsArray<JObject>();
-                foreach (JObject jObj in jsonArray)
-                {
-                    if (jObj["type"].ToString() == "ISBN_10")
-                        book.ISBN_10 = GetStringValue(jObj, "identifier");
-                    else if (jObj["type"].ToString() == "ISBN_13")
-                        book.ISBN_13 = GetStringValue(jObj, "identifier");
-                }
-            
+            string[]? categories = ((JArray)jsonInfo["categories"]).ValueAsArray<string>();
+            book.Category = categories[0];
         }
-        catch (Exception) { }
-        return Task.FromResult(book);
+        catch
+        {
+            book.Category = null;
+        }
+        
+            JObject[] jsonArray = jsonInfo["industryIdentifiers"].ValueAsArray<JObject>();
+            foreach (JObject jObj in jsonArray)
+            {
+                if (jObj["type"].ToString() == "ISBN_10")
+                    book.ISBN_10 = GetStringValue(jObj, "identifier");
+                else if (jObj["type"].ToString() == "ISBN_13")
+                    book.ISBN_13 = GetStringValue(jObj, "identifier");
+            }
+   
+
+
+        return book;
     }
 
-    private string GetStringValue(JObject json, string key)
+
+    private string GetStringValue(JObject? json, string key)
     {
-         try { return json[key].ToString(); }
+        try { return json[key].ToString(); }
         catch { return ""; }
     }
+
     private string GetStringFromArrayValue(JObject json, string key)
     {
         try
@@ -155,6 +150,7 @@ public class BookApiRepository
         }
         catch { return ""; }
     }
+
     private int GetIntValue(JObject json, string key)
     {
         try { return (int)json[key]; }

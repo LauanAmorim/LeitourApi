@@ -57,7 +57,7 @@ namespace LeitourApi.Controllers
                 return _message.MsgInvalid();
             post.AlteratedDate = DateTime.UtcNow;
             uow.PostRepository.Add(post);
-            return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            return CreatedAtAction("PostPost", new { id = post.Id }, post);
         }
 
 

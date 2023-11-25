@@ -8,7 +8,7 @@ CREATE TABLE tbl_usuario (
     usuario_nome VARCHAR(30) not null,
     usuario_email VARCHAR(100) not null unique,
     usuario_senha VARCHAR(64) not null,
-    usuario_acesso ENUM('Admin', 'Comum','Premium','Desativado') not null default 'comum',
+    usuario_acesso ENUM('Admin', 'Comum','Premium','Desativado') not null default 'Comum',
     usuario_data_cadastro DATETIME default current_timestamp,
     usuario_foto_perfil varchar(256)
 );
@@ -39,7 +39,7 @@ CREATE TABLE tbl_comentario (
 
 -- Tabela livros
 create table tbl_livro_salvo(
-    pk_livro_salvo_id int primary key auto_increment,
+    -- pk_livro_salvo_id int primary key auto_increment,
     fk_usuario_id int not null,
     foreign key(fk_usuario_id) references tbl_usuario(pk_usuario_id),
     livro_salvo_chave_livro varchar(25) not null,
@@ -122,13 +122,13 @@ sp_verificar_like: begin
 		select -1;
 		leave sp_verificar_like;
     end if;
-    set @likes := (select count(*) from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao);
-	if(select @likes = 0)then
+    set @usuariolikes := (select count(*) from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao);
+	if(select @usuariolikes = 0)then
 		insert into tbl_like(fk_usuario_id,fk_publicacao_id) values (vIdUser,vIdPublicacao);
 	else
 		delete from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao;        
 	end if;
-    select (@likes = 0);
+    select (@usuariolikes = 0);
 end $$
 delimiter ;
 
@@ -175,22 +175,6 @@ END$$
 DELIMITER ;
 
 
-insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Lucas','12345','Lucas@gmail.com');
-insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Daniel','12345','Daniel@gmail.com');
-insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Luiz','12345','Luiz@gmail.com');
-insert into tbl_usuario(usuario_nome,usuario_email,usuario_senha) values ("jose","jose@email.com","1234"),("maria","maria@email.com","4321");
-
-
-insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(1,'Tesytando');
-insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(3,'Tesytando');
-insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(5,'Tesytando');
-
-call sp_seguidor_seguir(1,'Daniel@gmail.com');
-select * from tbl_seguidor;
-call sp_seguidor_desseguir(1,'Daniel@gmail.com');
-select * from tbl_seguidor;
-
-
 insert into tbl_comentario(fk_usuario_id,fk_publicacao_id,comentario_texto) values(1,1,'Eai man');
 
 
@@ -207,6 +191,8 @@ delimiter ;
 delimiter //
 create view vw_publicacao as
 SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,
+(   SELECT COUNT(*) FROM tbl_comentario
+        WHERE fk_publicacao_id = pk_publicacao_id) as num_comentario,
     (SELECT COUNT(*) FROM tbl_like
         WHERE fk_publicacao_id = pk_publicacao_id) as likes
     FROM tbl_publicacao
@@ -229,10 +215,3 @@ begin
 	select * from tbl_usuario where pk_usuario_id = vIdUser;
 end $$
 delimiter ;
-
-insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(1,'Tesytando');
-insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(3,'Tesytando');
-
-select * from tbl_publicacao;
-call sp_like(1,1);
-select * from tbl_like;

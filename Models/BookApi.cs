@@ -15,6 +15,7 @@ namespace LeitourApi.Models
         public string Publisher { get; set; }
         public string PublishedDate { get; set; }
         public string Description { get; set; }
+        public string Category { get; set; }
         public int Pages { get; set; }
         public string ISBN_10 { get; set; }
         public string ISBN_13 { get; set; }

@@ -40,6 +40,7 @@ public class SavedBooksController : ControllerBase
     }
 
 
+
     [HttpGet("{key}")]
     public async Task<ActionResult<SavedBook>> GetSaved(string key,[FromHeader] string token)
     {
@@ -51,6 +52,21 @@ public class SavedBooksController : ControllerBase
             return message.MsgDeactivate();
         SavedBook saved = await uow.SavedRepository.GetByCondition(s => s.UserId == user.Id && s.BookKey == key);
         return (saved != null) ? saved : message.MsgNotFound();
+    }
+    [HttpGet("new/{key}")]
+    public async Task<ActionResult<dynamic>> GetSavedNew(string key,[FromHeader] string token)
+    {
+        int userId = TokenService.DecodeToken(token);
+        User? user = await uow.UserRepository.GetById(userId);
+        if(user == null)
+            return message.MsgNotFound();
+        if(user.Access == "Desativado")
+            return message.MsgDeactivate();
+        SavedBook saved = await uow.SavedRepository.GetByCondition(s => s.UserId == user.Id && s.BookKey == key);
+        if(saved == null)
+            return message.MsgNotFound();
+        var annotation = await uow.AnnotationRepository.GetAllByCondition(a => a.SavedBookId == saved.Id);
+        return new {saved, annotation};
     }
 
     [HttpPost]
