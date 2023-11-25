@@ -8,7 +8,7 @@ CREATE TABLE tbl_usuario (
     usuario_nome VARCHAR(30) not null,
     usuario_email VARCHAR(100) not null unique,
     usuario_senha VARCHAR(64) not null,
-    usuario_acesso ENUM('Admin', 'Comum','Premium','Desativado') not null default 'Comum',
+    usuario_acesso ENUM('Admin', 'Comum','Premium','Desativado') not null default 'comum',
     usuario_data_cadastro DATETIME default current_timestamp,
     usuario_foto_perfil varchar(256)
 );
@@ -20,7 +20,7 @@ CREATE TABLE tbl_publicacao (
     fk_usuario_id INT not null,
     FOREIGN KEY (fk_usuario_id) REFERENCES tbl_usuario(pk_usuario_id),
     publicacao_texto VARCHAR(250) not null,
-    publicacao_data_criacao DATETIME not null default current_timestamp,
+    publicacao_data_criacao DATETIME default current_timestamp,
     publicacao_data_alteracao date
 );
 
@@ -32,23 +32,22 @@ CREATE TABLE tbl_comentario (
     fk_publicacao_id INT not null,
     FOREIGN KEY (fk_publicacao_id) REFERENCES tbl_publicacao(pk_publicacao_id),
     comentario_texto VARCHAR(250) not null,
-    comentario_data_criacao DATETIME not null default current_timestamp,
+    comentario_data_criacao  DATETIME default current_timestamp,
     comentario_data_alteracao date
 );
 
 
 -- Tabela livros
 create table tbl_livro_salvo(
-    -- pk_livro_salvo_id int primary key auto_increment,
+    pk_livro_salvo_id int primary key auto_increment,
     fk_usuario_id int not null,
     foreign key(fk_usuario_id) references tbl_usuario(pk_usuario_id),
     livro_salvo_chave_livro varchar(25) not null,
     livro_salvo_publico tinyint not null default 0,
-    livro_salvo_capa varchar(120) not null,
+    livro_salvo_capa varchar(100) not null,
     livro_salvo_titulo varchar(255) not null
 
 );
-
 
 -- Tabela anotacao
 
@@ -111,26 +110,18 @@ delimiter ;
 
 delimiter $$
 Create procedure sp_like(in vIdUser int, in vIdPublicacao int)
-sp_verificar_like: begin
-	SET @usuario := (select pk_usuario_id from tbl_usuario where pk_usuario_id = vIdUser);
-    if(@usuario is null)then
-		select -1;
-		leave sp_verificar_like;
-    end if;
-	SET @publicacao := (select pk_publicacao_id from tbl_publicacao where pk_publicacao_id = vIdPublicacao);
-    if(@publicacao is null)then
-		select -1;
-		leave sp_verificar_like;
-    end if;
-    set @usuariolikes := (select count(*) from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao);
-	if(select @usuariolikes = 0)then
-		insert into tbl_like(fk_usuario_id,fk_publicacao_id) values (vIdUser,vIdPublicacao);
-	else
-		delete from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao;        
-	end if;
-    select (@usuariolikes = 0);
+begin
+	insert into tbl_like(fk_usuario_id,fk_publicacao_id) values (vIdUser,vIdPublicacao);
 end $$
 delimiter ;
+
+delimiter $$
+Create procedure sp_deslike(in vIdUser int, in vIdPublicacao int)
+begin
+	delete from tbl_like where fk_usuario_id = vIdUser and fk_publicacao_id = vIdPublicacao;
+end $$
+delimiter ;
+
 
 -- Deletar comentários juntos com a publicacao
 DELIMITER $$
@@ -175,6 +166,22 @@ END$$
 DELIMITER ;
 
 
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Lucas','12345','Lucas@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Daniel','12345','Daniel@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Luiz','12345','Luiz@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_email,usuario_senha) values ("jose","jose@email.com","1234"),("maria","maria@email.com","4321");
+
+
+insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(1,'Tesytando');
+insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(3,'Tesytando');
+insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values(5,'Tesytando');
+
+call sp_seguidor_seguir(1,'Daniel@gmail.com');
+select * from tbl_seguidor;
+call sp_seguidor_desseguir(1,'Daniel@gmail.com');
+select * from tbl_seguidor;
+
+
 insert into tbl_comentario(fk_usuario_id,fk_publicacao_id,comentario_texto) values(1,1,'Eai man');
 
 
@@ -191,8 +198,6 @@ delimiter ;
 delimiter //
 create view vw_publicacao as
 SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,
-(   SELECT COUNT(*) FROM tbl_comentario
-        WHERE fk_publicacao_id = pk_publicacao_id) as num_comentario,
     (SELECT COUNT(*) FROM tbl_like
         WHERE fk_publicacao_id = pk_publicacao_id) as likes
     FROM tbl_publicacao
@@ -201,17 +206,26 @@ SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,
 //
 delimiter ;
 
-
+select * from vw_publicacao;
 
 delimiter //
 create view vw_usuario as
-SELECT pk_usuario_id,usuario_nome,usuario_email,"" as usuario_senha,"" as usuario_acesso,usuario_data_cadastro,usuario_foto_perfil FROM tbl_usuario;
+SELECT pk_usuario_id,usuario_nome,usuario_email,usuario_data_cadastro,usuario_foto_perfil FROM tbl_usuario;
 //
 delimiter ;
 
-delimiter $$
-Create procedure sp_usuario(in vIdUser int)
-begin
-	select * from tbl_usuario where pk_usuario_id = vIdUser;
-end $$
-delimiter ;
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Lucas','12345','Lucas@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Daniel','12345','Daniel@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_senha,usuario_email) values('Luiz','12345','Luiz@gmail.com');
+insert into tbl_usuario(usuario_nome,usuario_email,usuario_senha) values ("jose","jose@email.com","1234"),("maria","maria@email.com","4321");
+INSERT INTO tbl_usuario (usuario_nome, usuario_senha, usuario_email) VALUES ('Lauan', SHA2('lauan123', 256), 'Lauan@gmail.com');
+select * from tbl_usuario;
+call sp_seguidor_seguir(1,'Daniel@gmail.com');
+select * from tbl_seguidor;
+call sp_seguidor_desseguir(1,'Daniel@gmail.com');
+select * from tbl_seguidor;
+
+
+
+INSERT INTO tbl_usuario (usuario_nome, usuario_senha, usuario_email) VALUES ('Lauan22', SHA2('lauaN1232', 256), 'Lauan22@gmail.com');
+SELECT * FROM tbl_usuario WHERE usuario_email = 'lauan@gmail.com' AND usuario_senha = SHA2('lauan1232', 256);

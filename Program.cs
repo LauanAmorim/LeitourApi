@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using LeitourApi.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
@@ -23,30 +25,23 @@ builder.Services.AddScoped<BookApiRepository>();
 string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine(connection);
 
-builder.Services.AddDbContext<LeitourContext>(options =>{
-    options.UseMySql(connection,ServerVersion.AutoDetect(connection));
-    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-  }
+builder.Services.AddDbContext<LeitourContext>(options =>
+    options.UseMySql(connection, ServerVersion.AutoDetect(connection))
 );
-
 
 var app = builder.Build();
 
+app.UseSwagger();
+app.UseSwaggerUI();
 
-  app.UseSwagger();
-  app.UseSwaggerUI();
-// Configure the HTTP request pipeline.
-/*
-if (app.Environment.IsDevelopment())
+app.UseCors(builder =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-*/
+    builder.WithOrigins("https://localhost:44398")
+           .AllowAnyHeader()
+           .AllowAnyMethod();
+});
+
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

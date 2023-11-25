@@ -137,8 +137,18 @@ public class BookApiRepository
 
     private string GetStringValue(JObject? json, string key)
     {
-        try { return json[key].ToString(); }
-        catch { return ""; }
+        try
+        {
+            if (json != null && json[key] != null)
+            {
+                return json[key].ToString();
+            }
+            return "";
+        }
+        catch (Exception)
+        {
+            return "";
+        }
     }
 
     private string GetStringFromArrayValue(JObject json, string key)
