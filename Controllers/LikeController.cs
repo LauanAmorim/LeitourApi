@@ -23,7 +23,7 @@ namespace LeitourApi.Controllers
         }
 
 
-        [HttpPost("like/{id}")]
+        [HttpGet("like/{id}")]
         public async Task<IActionResult> Like([FromHeader] string token,int id)
         {
             int userId = TokenService.DecodeToken(token);

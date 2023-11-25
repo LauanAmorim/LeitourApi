@@ -23,8 +23,10 @@ builder.Services.AddScoped<BookApiRepository>();
 string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine(connection);
 
-builder.Services.AddDbContext<LeitourContext>(options =>
-    options.UseMySql(connection,ServerVersion.AutoDetect(connection))
+builder.Services.AddDbContext<LeitourContext>(options =>{
+    options.UseMySql(connection,ServerVersion.AutoDetect(connection));
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+  }
 );
 
 

@@ -23,12 +23,6 @@ public class UserController : ControllerBase
         message = new Message("Usuário", "o");
     }
 
-    [HttpGet("criptografar/{message}")]
-    public async Task<IActionResult> Criptografar(string message)
-    {
-        string criptografado = Cryptography.Criptografar(message);
-        return Ok(criptografado);
-    }
 
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetUsers([FromQuery(Name = Constants.OFFSET)] int page) => await uow.UserRepository.GetAll(page);

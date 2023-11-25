@@ -36,6 +36,7 @@ namespace LeitourApi.Controllers
         [HttpGet("Title/{title}")]
         public async Task<ActionResult<IEnumerable<BookApi>>?> GetByTitle(string title,[FromQuery(Name = Constants.OFFSET)] int page)
         {
+            page = page == null ? 0 : page;
             Uri url = new($"{API_URL}intitle:{title}{API_PARAMS}{page}");
             JObject response = await _bookApi.HttpGet(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
@@ -50,12 +51,12 @@ namespace LeitourApi.Controllers
         public async Task<ActionResult<BookApi>?> GetByIsbn(string isbn)
         {
             Uri url = new($"{API_URL}isbn:{isbn}");
-            JObject response = await _bookApi.HttpGet(url);
+            JObject response = await _bookApi.HttpGetOne(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
                 return mesage.MsgNotReturned();
             if((int?) response["Code"]  == StatusCodes.Status404NotFound)
                 return mesage.MsgNotFound();
-            BookApi book = ( await _bookApi.FormatResponse(response))[0];
+            BookApi book = await _bookApi.FormatOneResponse(response);
             return book;
         }
         [HttpGet("author/{author}")]
@@ -74,12 +75,12 @@ namespace LeitourApi.Controllers
         public async Task<ActionResult<BookApi>?> GetByKey(string key)
         {
             Uri url = new($"https://www.googleapis.com/books/v1/volumes/{key}");
-            JObject response = await _bookApi.HttpGet(url);
+            JObject response = await _bookApi.HttpGetOne(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
                 return mesage.MsgNotReturned();
             if((int?) response["Code"]  == StatusCodes.Status404NotFound)
                 return mesage.MsgNotFound();
-            BookApi book = (await _bookApi.FormatResponse(response))[0];
+            BookApi book = await _bookApi.FormatOneResponse(response);
             return book;
         }
     }

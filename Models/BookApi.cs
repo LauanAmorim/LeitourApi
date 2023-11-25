@@ -20,5 +20,6 @@ namespace LeitourApi.Models
         public string ISBN_13 { get; set; }
         public string Language { get; set; }
         public string Cover { get; set; }
+
     }
 }

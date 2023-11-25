@@ -33,19 +33,20 @@ public class Repository<T> : IRepository<T> where T : class
 
     public void Add(T entity)
     {
-        dbSet.Add(entity);
+        _context.Add(entity);
         _context.SaveChanges();
     }
 
     public void Update(T entity)
     {
-        dbSet.Entry(entity).State = EntityState.Modified;
+        //dbSet.Update(entity);
+        _context.Entry(entity).State = EntityState.Modified;
         _context.SaveChanges();
     }
 
     public void Delete(T entity)
     {
-        dbSet.Remove(entity);
+        _context.Remove(entity);
         _context.SaveChanges();
     }
 

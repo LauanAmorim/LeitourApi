@@ -103,6 +103,44 @@ public class BookApiRepository
         return Task.FromResult(Books);
     }
 
+    public Task<BookApi> FormatOneResponse(JObject response)
+    {
+        BookApi book = new();
+        try
+        {
+                
+                JObject jsonItems = response;
+
+                book.Key = GetStringValue(jsonItems, "id");
+
+                JObject jsonInfo = (JObject)jsonItems["volumeInfo"];
+
+                book.Title = GetStringValue(jsonInfo, "title");
+                book.Authors = GetStringFromArrayValue(jsonInfo, "authors");
+                book.Publisher = GetStringValue(jsonInfo, "publisher");
+                book.PublishedDate = GetStringValue(jsonInfo, "publishedDate");
+                book.Description = GetStringValue(jsonInfo, "description");
+                book.Language = GetStringValue(jsonInfo, "language");
+                book.Pages = GetIntValue(jsonInfo, "pageCount");
+                JObject jsonImage = (JObject)jsonInfo["imageLinks"];
+                book.Cover = GetStringValue(jsonImage, "thumbnail").Replace("zoom=1","zoom=0");
+                book.ISBN_10 = "";
+                book.ISBN_13 = "";
+
+                JObject[] jsonArray = jsonInfo["industryIdentifiers"].ValueAsArray<JObject>();
+                foreach (JObject jObj in jsonArray)
+                {
+                    if (jObj["type"].ToString() == "ISBN_10")
+                        book.ISBN_10 = GetStringValue(jObj, "identifier");
+                    else if (jObj["type"].ToString() == "ISBN_13")
+                        book.ISBN_13 = GetStringValue(jObj, "identifier");
+                }
+            
+        }
+        catch (Exception) { }
+        return Task.FromResult(book);
+    }
+
     private string GetStringValue(JObject json, string key)
     {
          try { return json[key].ToString(); }
