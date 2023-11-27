@@ -16,6 +16,8 @@ public class Post
 
     [Column("usuario_nome")]
     public string? UserName { get; }
+    [Column("usuario_foto")]
+    public string? UserPhoto { get; }
 
     [Column("publicacao_texto",TypeName = "varchar(250)")]
     public required string MessagePost { get; set; } = null!;
@@ -28,7 +30,7 @@ public class Post
     public int Comment_Number { get; }
 
     [Column("publicacao_data_criacao",TypeName = "date")]
-    public required DateTime PostDate { get; set; }
+    public required DateTime CreatedDate { get; set; }
     
     [Column("publicacao_data_alteracao",TypeName = "date")]
     public DateTime? AlteratedDate { get; set; }

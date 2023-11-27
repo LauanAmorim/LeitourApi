@@ -13,7 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
@@ -25,8 +24,10 @@ builder.Services.AddScoped<BookApiRepository>();
 string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine(connection);
 
-builder.Services.AddDbContext<LeitourContext>(options =>
-    options.UseMySql(connection, ServerVersion.AutoDetect(connection))
+builder.Services.AddDbContext<LeitourContext>(options =>{
+    options.UseMySql(connection, ServerVersion.AutoDetect(connection));
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+    }
 );
 
 var app = builder.Build();
@@ -36,11 +37,10 @@ app.UseSwaggerUI();
 
 app.UseCors(builder =>
 {
-    builder.WithOrigins("https://localhost:44398")
+    builder.WithOrigins("https://www.googleapis.com/")
            .AllowAnyHeader()
            .AllowAnyMethod();
 });
-
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

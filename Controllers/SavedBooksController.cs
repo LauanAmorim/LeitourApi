@@ -4,6 +4,7 @@ using LeitourApi.Repository;
 using LeitourApi.Interfaces;
 using LeitourApi.Data;
 using Microsoft.AspNetCore.Identity;
+using LeitourApi.Services;
 
 namespace LeitourApi.Controllers;
 
@@ -12,11 +13,11 @@ namespace LeitourApi.Controllers;
 public class SavedBooksController : ControllerBase
 {
     private readonly IUnitOfWork uow;
-    private readonly Message message;
+    private readonly MessageService message;
     public SavedBooksController(IUnitOfWork unitOfWork)
     {
         uow = unitOfWork;
-        message = new Message("Livro", "o");
+        message = new MessageService("Livro", "o");
     }
 
     [HttpGet]

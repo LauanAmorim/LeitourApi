@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 
-namespace LeitourApi.Data
+namespace LeitourApi.Services
 {
     public static class TokenService
     {

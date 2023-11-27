@@ -12,6 +12,7 @@ using System.IO;
 using System.Text.Json.Nodes;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+using LeitourApi.Services;
 
 namespace LeitourApi.Controllers
 {
@@ -26,11 +27,11 @@ namespace LeitourApi.Controllers
         private static string API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
         public readonly BookApiRepository _bookApi;
-        public readonly Message mesage;
+        public readonly MessageService mesage;
 
         public BookApiController(BookApiRepository bookApi){
             _bookApi = bookApi;
-            mesage = new Message("livro","o");    
+            mesage = new MessageService("livro","o");    
         }
 
         [HttpGet("Title/{title}")]

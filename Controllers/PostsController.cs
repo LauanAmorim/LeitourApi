@@ -4,6 +4,7 @@ using LeitourApi.Repository;
 using LeitourApi.Interfaces;
 using System.Threading.Tasks;
 using LeitourApi.Data;
+using LeitourApi.Services;
 
 namespace LeitourApi.Controllers
 {
@@ -11,7 +12,7 @@ namespace LeitourApi.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly Message _message;
+        private readonly MessageService _message;
         private readonly IUnitOfWork uow;
        
         public const string offset = "offset";
@@ -19,7 +20,7 @@ namespace LeitourApi.Controllers
         public PostsController(IUnitOfWork unitOfWork)
         {
             uow = unitOfWork;
-            _message = new Message("Post", "o");
+            _message = new MessageService("Post", "o");
         }
 
 
@@ -44,7 +45,7 @@ namespace LeitourApi.Controllers
         {
             var user = await uow.UserRepository.GetByCondition(u => u.Email == email);
             if(user == null)
-                return new Message("Usuario","o").MsgNotFound();
+                return new MessageService("Usuario","o").MsgNotFound();
             var posts = await uow.PostRepository.GetAllByCondition(p => p.UserId == user.Id,page);
             return posts != null ? posts : _message.MsgNotFound();
         }

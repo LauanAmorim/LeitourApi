@@ -19,13 +19,14 @@ public class Repository<T> : IRepository<T> where T : class
 
     public virtual async Task<T?> GetById(int id) => await dbSet.FindAsync(id);
 
-    public virtual async Task<List<T>?> GetAll() => await dbSet.Skip(0).Take(Constants.LIMIT_VALUE).ToListAsync();
+    public virtual async Task<List<T>?> GetAll() => await GetAll(0);
+    
     public virtual async Task<List<T>?> GetAll(int offset) => await dbSet.Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
     public async Task<T?> GetByCondition(Expression<Func<T, bool>> predicate) =>
        await dbSet.Where(predicate).FirstOrDefaultAsync();
 
     public async Task<List<T>?> GetAllByCondition(Expression<Func<T, bool>> predicate) =>
-        await dbSet.Where(predicate).ToListAsync();
+        await GetAllByCondition(predicate,0);
 
     public async Task<List<T>?> GetAllByCondition(Expression<Func<T, bool>> predicate, int offset) =>
         await dbSet.Where(predicate).Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();

@@ -5,6 +5,7 @@ using LeitourApi.Interfaces;
 using LeitourApi.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
+using LeitourApi.Services;
 
 
 namespace LeitourApi.Controllers;
@@ -14,13 +15,15 @@ namespace LeitourApi.Controllers;
 public class FollowController : ControllerBase
 {
     private readonly IUnitOfWork uow;
-    private readonly Message message;
+    private readonly MessageService message;
+    private readonly ValidateUserService validate;
 
 
     public FollowController(IUnitOfWork unitOfWork)
     {
         uow = unitOfWork;
-        message = new Message("Usuário", "o");
+        validate = new ValidateUserService(unitOfWork);
+        message = new MessageService("Usuário", "o");
     }
 
 

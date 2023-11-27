@@ -18,6 +18,8 @@ public class Comment
 
     [Column("usuario_nome")]
     public string? UserName { get; set; }
+    [Column("usuario_foto")]
+    public string? UserPhoto { get; }
 
     [Column("fk_publicacao_id", TypeName = "int")]
     public required int PostId { get; set; }
@@ -26,7 +28,7 @@ public class Comment
     public required string MessagePost { get; set; } = null!;
 
     [Column("comentario_data_criacao", TypeName = "date")]
-    public DateTime PostDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     [Column("comentario_data_alteracao", TypeName = "date")]
     public DateTime? AlteratedDate { get; set; }

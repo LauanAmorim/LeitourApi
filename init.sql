@@ -39,7 +39,7 @@ CREATE TABLE tbl_comentario (
 
 -- Tabela livros
 create table tbl_livro_salvo(
-    -- pk_livro_salvo_id int primary key auto_increment,
+    pk_livro_salvo_id int primary key auto_increment,
     fk_usuario_id int not null,
     foreign key(fk_usuario_id) references tbl_usuario(pk_usuario_id),
     livro_salvo_chave_livro varchar(25) not null,
@@ -153,17 +153,6 @@ BEGIN
 END$$    
 DELIMITER ;
 
--- Adicionar a data da ultima alteração
-DELIMITER $$
-CREATE TRIGGER tr_anotacao_after_update
-    BEFORE update
-    ON tbl_anotacao FOR EACH ROW
-BEGIN
-	update tbl_anotacao set anotacao_data_alteracao = current_timestamp
-    where tbl_anotacao.pk_anotacao_id = OLD.pk_anotacao_id;
-END$$    
-DELIMITER ;
-
 -- Apaga as anotações quando se dessalva o livro
 DELIMITER $$
 CREATE TRIGGER tr_livro_salvo_before_delete
@@ -173,10 +162,6 @@ BEGIN
 	delete from tbl_anotacao where tbl_anotacao.fk_livro_salvo_id = OLD.pk_livro_salvo_id;
 END$$    
 DELIMITER ;
-
-
-insert into tbl_comentario(fk_usuario_id,fk_publicacao_id,comentario_texto) values(1,1,'Eai man');
-
 
  -- selecionar a publicação e o nome do usuario
  delimiter //

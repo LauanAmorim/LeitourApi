@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using LeitourApi.Models;
-using LeitourApi.Data;
+using LeitourApi.Services;
 using LeitourApi.Repository;
 using LeitourApi.Interfaces;
 
@@ -14,13 +14,12 @@ namespace LeitourApi.Controllers
     public class AnnotationsController : ControllerBase
     {
         private readonly IUnitOfWork uow;
-        private readonly Message message;
-      //  private readonly ISavedRepository savedRepo;
+        private readonly MessageService message;
         public AnnotationsController(IUnitOfWork unitOfWork)
         {
             uow = unitOfWork;
-            message = new Message("Anotações", "o");
-            //   this.savedRepo = savedRepo;
+            message = new MessageService("Anotações", "o");
+         
         }
 
         [HttpGet("savedBook/{id}")]
@@ -64,7 +63,7 @@ namespace LeitourApi.Controllers
                 return message.MsgInvalid();
             SavedBook saved = await uow.SavedRepository.GetById(id);
             if (saved == null)
-                return new Message("Livr","o").MsgNotFound();
+                return new MessageService("Livr","o").MsgNotFound();
             uow.AnnotationRepository.Add(annotation);
             return Ok(annotation);
         }

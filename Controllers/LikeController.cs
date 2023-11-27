@@ -4,6 +4,7 @@ using LeitourApi.Repository;
 using LeitourApi.Interfaces;
 using System.Threading.Tasks;
 using LeitourApi.Data;
+using LeitourApi.Services;
 
 namespace LeitourApi.Controllers
 {
@@ -11,7 +12,7 @@ namespace LeitourApi.Controllers
     [ApiController]
     public class LikeController : ControllerBase
     {
-        private readonly Message _message;
+        private readonly MessageService _message;
         private readonly IUnitOfWork uow;
        
         public const string offset = "offset";
@@ -19,7 +20,7 @@ namespace LeitourApi.Controllers
         public LikeController(IUnitOfWork unitOfWork)
         {
             uow = unitOfWork;
-            _message = new Message("Like", "o");
+            _message = new MessageService("Like", "o");
         }
 
 
@@ -28,7 +29,7 @@ namespace LeitourApi.Controllers
         {
             int userId = TokenService.DecodeToken(token);
             if (userId == -1)
-                return new Message("Usuario","o").MsgNotFound();
+                return new MessageService("Usuario","o").MsgNotFound();
             if(await uow.UserRepository.IsDeactivated(userId))
                 return _message.MsgDeactivate();
             Post? post = await uow.PostRepository.GetById(id);

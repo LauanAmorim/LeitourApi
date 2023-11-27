@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LeitourApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using LeitourApi.Services;
 
 namespace LeitourApi.Controllers
 {
@@ -13,12 +14,12 @@ namespace LeitourApi.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly Message _message;
+        private readonly MessageService _message;
         private readonly IUnitOfWork uow;
         public CommentController(IUnitOfWork unitOfWork)
         {
             uow = unitOfWork;
-            _message = new Message("Comentário", "o");
+            _message = new MessageService("Comentário", "o");
         }
 
         [HttpGet("/api/Posts/[Controller]/{id}")]
@@ -26,31 +27,31 @@ namespace LeitourApi.Controllers
         {
             var Post = await uow.PostRepository.GetById(id);
             if(Post == null)
-                return new Message("Post","o").MsgNotFound(); 
+                return new MessageService("Post","o").MsgNotFound(); 
             
             var comment = await uow.CommentRepository.GetAllByCondition(c => c.PostId == Post.Id,page);
             return comment != null ? comment : _message.MsgNotFound();
         }
 
-        [Obsolete("Write a better path name")]
+        /*[Obsolete("Write a better path name")]
         [HttpGet("/api/Posts/[Controller]/comment/{id}")]
         public async Task<ActionResult<Comment>> GetComment(int id)
         {
             var Comment = await uow.CommentRepository.GetById(id);
             return Comment != null ? Comment : _message.MsgNotFound();
-        }
+        }*/
 
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment([FromHeader] string token, Comment comment)
         {
             User? user = await uow.UserRepository.GetById(TokenService.DecodeToken(token));
             if(user == null)
-                return new Message("Usuari","o").MsgNotFound();
+                return new MessageService("Usuari","o").MsgNotFound();
             if (user.Id != comment.UserId)
                 return _message.MsgInvalid();
             if (user.Access == "Desativado")
                 return _message.MsgDeactivate();
-            comment.PostDate = DateTime.UtcNow;
+            comment.CreatedDate = DateTime.UtcNow;
             uow.CommentRepository.Add(comment);
             return CreatedAtAction("PostComment", comment);
         }
@@ -61,7 +62,7 @@ namespace LeitourApi.Controllers
         {
             User? user = await uow.UserRepository.GetById(TokenService.DecodeToken(token));
             if(user == null)
-                return new Message("Usuari","o").MsgNotFound();
+                return new MessageService("Usuari","o").MsgNotFound();
             if (user.Access == "Desativado")
                 return _message.MsgDeactivate();
             var Comment = await uow.CommentRepository.GetById(id);
@@ -82,7 +83,7 @@ namespace LeitourApi.Controllers
                 return _message.MsgNotFound();
             User? user = await uow.UserRepository.GetById(TokenService.DecodeToken(token));
             if(user == null)
-                return new Message("Usuari","o").MsgNotFound();
+                return new MessageService("Usuari","o").MsgNotFound();
             if (user.Id != Comment.UserId)
                 return _message.MsgInvalid();
             if (user.Access == "Desativado")

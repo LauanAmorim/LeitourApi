@@ -23,7 +23,7 @@ public class User
     [Required]
     public required string Password { get; set; } = null!;
 
-    [Column("usuario_foto_perfil",TypeName = "varchar(256)")]
+    [Column("usuario_foto_perfil")]
     public string? ProfilePhoto { get; set; }
 
     [Column("usuario_acesso", TypeName="Enum")]

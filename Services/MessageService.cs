@@ -1,19 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace LeitourApi.Models;
+namespace LeitourApi.Services;
 
 [ApiExplorerSettings(IgnoreApi = true)]
-public class Message : ControllerBase
+public class MessageService : ControllerBase
 {
     public string CREATE = "criad";
     public string UPDATE = "atualizad";
     public string DELETE = "deletad";
     public string DEACTIVATE = "desativad";
+    public string SUCCESS = "SUCCESS";
     //public const string CREATE = "criad";
     private string controller {get;set;}
     private string artigo {get;set;}
     
-    public Message(string controller, string artigo){
+    public MessageService(string controller, string artigo){
         this.controller = controller;
         this.artigo = artigo;
     }
@@ -38,6 +39,9 @@ public class Message : ControllerBase
     }
 
     public ActionResult MsgNotReturned() => StatusCode(StatusCodes.Status500InternalServerError, $"Falha ao pesquisar {controller}. Verifique a conexão de internet.");
+
+    //public ActionResult MsgSuccess() => ;
+    
 
     //public ActionResult<List<Annotation>> MsgPrivated() => BadRequest("Essas anotações são privadas");
 }
