@@ -206,17 +206,3 @@ begin
 	select * from tbl_usuario where pk_usuario_id = vIdUser;
 end $$
 delimiter ;
-select * from tbl_usuario;
-insert into tbl_usuario(usuario_nome,usuario_email,usuario_senha) values ("Marco","Corno","123");
-insert into tbl_usuario(usuario_nome,usuario_email,usuario_senha) values ("Maria","Ccorno","123");
-insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values (1, "Ola");
-insert into tbl_publicacao(fk_usuario_id,publicacao_texto) values (2, "Ola");
-call sp_like(1,1,@vSucesso);
-select * from tbl_like;
-call sp_like(1,1,@vSucesso);
-select * from tbl_like;
-select * from tbl_usuario;
-select * from tbl_publicacao;
-select * from vw_publicacao;
-call sp_select_publicacao(1);
-call sp_select_publicacao(2);
