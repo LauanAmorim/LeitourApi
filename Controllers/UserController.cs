@@ -118,8 +118,6 @@ public class UserController : ControllerBase
             return message.MsgNotFound();
         if (await uow.UserRepository.IsDeactivated(id))
             return message.MsgDeactivate();
-        if (user.Id != id)
-            return message.MsgInvalid();
 
         if (file !=null && file.Length > 0)
         {
@@ -141,7 +139,7 @@ public class UserController : ControllerBase
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                return BadRequest("ferrou " + ex.ToString());
             }
         }
         else

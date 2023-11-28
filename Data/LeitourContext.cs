@@ -29,6 +29,11 @@ namespace LeitourApi.Data
             modelBuilder.Entity<Post>().Property(e => e.Likes)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             
+            modelBuilder.Entity<Post>().Property(e => e.Liked)
+            .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+            modelBuilder.Entity<Post>().Property(e => e.Liked)
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+            
             modelBuilder
               .Entity<Post>()
               .ToView(PostRepository.VIEW_POST)
@@ -49,7 +54,5 @@ namespace LeitourApi.Data
             modelBuilder.Entity<Comment>().Property(e => e.UserName)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
         }
-
-     //   private void()
     }
 }

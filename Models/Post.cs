@@ -26,7 +26,7 @@ public class Post : BaseModel
     public int Likes { get; }
 
     [Column("liked")]
-    public bool Liked { get; }
+    public bool Liked { get; } = false;
 
 
     [Column("num_comentario")]

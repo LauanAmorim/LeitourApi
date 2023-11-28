@@ -28,7 +28,7 @@ public class UserRepository : Repository<User>, IUserRepository
     public virtual async Task<User?> GetByEmail(string email) => 
         await dbSet.FromSql($"select * from tbl_usuario where usuario_email = {email}").FirstOrDefaultAsync();
 
-    public async Task<List<User>?> GetByUsername(int offset,string name) => 
+    public virtual async Task<List<User>?> GetByUsername(int offset,string name) => 
         await dbSet.Where(u => u.NameUser.Contains(name)).ToListAsync();
     
     public virtual async Task Follow(int id,string email) => 

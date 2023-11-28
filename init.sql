@@ -166,7 +166,7 @@ SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_foto_perfil
 	(SELECT COUNT(*) FROM tbl_comentario
         WHERE fk_publicacao_id = pk_publicacao_id) as num_comentario,
     (SELECT COUNT(*) FROM tbl_like
-        WHERE fk_publicacao_id = pk_publicacao_id) as likes, (select null) as "liked"
+        WHERE fk_publicacao_id = pk_publicacao_id) as likes, (select false) as "liked"
     FROM tbl_publicacao
     Inner JOIN tbl_usuario on pk_usuario_id
     where tbl_usuario.pk_usuario_id = tbl_publicacao.fk_usuario_id;

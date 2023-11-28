@@ -7,7 +7,7 @@ namespace LeitourApi.Interfaces
         IPostRepository PostRepository { get; }
         IRepository<Comment> CommentRepository { get; }
         IRepository<Annotation> AnnotationRepository { get; }
-        IRepository<SavedBook> SavedRepository { get; }
+        ISavedBookRepository SavedRepository { get; }
         void Commit();
     }
 }

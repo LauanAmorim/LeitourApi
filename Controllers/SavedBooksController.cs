@@ -39,6 +39,15 @@ public class SavedBooksController : ControllerBase
         List<SavedBook>? saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == user.Id && s.Public == true, page);
         return (saved != null) ? saved : message.MsgNotFound();
     }
+    [HttpGet("byTitle/{title}")]
+    public async Task<ActionResult<List<SavedBook>>> GetBookByTitle([FromHeader] string token,[FromQuery(Name = Constants.OFFSET)] int page, string title)
+    {
+        int id = TokenService.DecodeToken(token);
+        if(await uow.UserRepository.GetById(id) == null)
+            return message.MsgInvalid();
+        List<SavedBook>? saved = await uow.SavedRepository.GetByTitle(title,0);
+        return (saved != null) ? saved : message.MsgNotFound();
+    }
 
 
 
