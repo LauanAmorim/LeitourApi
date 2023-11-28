@@ -26,7 +26,7 @@ public class SavedBooksController : ControllerBase
         int id = TokenService.DecodeToken(token);
         if(await uow.UserRepository.GetById(id) == null)
             return message.MsgInvalid();
-        List<SavedBook> saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == id,page);
+        List<SavedBook>? saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == id,page);
         return (saved != null) ? saved : message.MsgNotFound();
     }
 
@@ -36,7 +36,7 @@ public class SavedBooksController : ControllerBase
         User? user = await uow.UserRepository.GetByCondition(u => u.Email == email);
         if(user == null)
             return message.NotFound();
-        List<SavedBook> saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == user.Id && s.Public == true,page);
+        List<SavedBook>? saved = await uow.SavedRepository.GetAllByCondition(s => s.UserId == user.Id && s.Public == true, page);
         return (saved != null) ? saved : message.MsgNotFound();
     }
 
@@ -51,7 +51,7 @@ public class SavedBooksController : ControllerBase
             return message.MsgNotFound();
         if(user.Access == "Desativado")
             return message.MsgDeactivate();
-        SavedBook saved = await uow.SavedRepository.GetByCondition(s => s.UserId == user.Id && s.BookKey == key);
+        SavedBook? saved = await uow.SavedRepository.GetByCondition(s => s.UserId == user.Id && s.BookKey == key);
         return (saved != null) ? saved : message.MsgNotFound();
     }
     [HttpGet("new/{key}")]
@@ -63,7 +63,7 @@ public class SavedBooksController : ControllerBase
             return message.MsgNotFound();
         if(user.Access == "Desativado")
             return message.MsgDeactivate();
-        SavedBook saved = await uow.SavedRepository.GetByCondition(s => s.UserId == user.Id && s.BookKey == key);
+        SavedBook? saved = await uow.SavedRepository.GetByCondition(s => s.UserId == user.Id && s.BookKey == key);
         if(saved == null)
             return message.MsgNotFound();
         var annotation = await uow.AnnotationRepository.GetAllByCondition(a => a.SavedBookId == saved.Id);

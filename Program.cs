@@ -37,7 +37,7 @@ app.UseSwaggerUI();
 
 app.UseCors(builder =>
 {
-    builder.WithOrigins("https://www.googleapis.com/")
+    builder.WithOrigins("http://localhost:44398/")
            .AllowAnyHeader()
            .AllowAnyMethod();
 });

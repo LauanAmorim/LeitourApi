@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LeitourApi.Models;
 
 [Table("tbl_comentario")]
-public class Comment
+public class Comment : BaseModel
 {
     [Key]
     [Column("pk_comentario_id", TypeName = "int")]
@@ -27,10 +27,7 @@ public class Comment
     [Column("comentario_texto", TypeName = "varchar(250)")]
     public required string MessagePost { get; set; } = null!;
 
-    [Column("comentario_data_criacao", TypeName = "date")]
-    public DateTime CreatedDate { get; set; }
-
-    [Column("comentario_data_alteracao", TypeName = "date")]
+    [Column("data_alteracao", TypeName = "date")]
     public DateTime? AlteratedDate { get; set; }
 
 }

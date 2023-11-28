@@ -20,7 +20,7 @@ namespace LeitourApi.Controllers
         public LikeController(IUnitOfWork unitOfWork)
         {
             uow = unitOfWork;
-            _message = new MessageService("Like", "o");
+            _message = new MessageService("Post", "o");
         }
 
 
@@ -35,10 +35,8 @@ namespace LeitourApi.Controllers
             Post? post = await uow.PostRepository.GetById(id);
             if(post == null)
                 return _message.MsgNotFound();
-            int result = await uow.PostRepository.Like(userId,id);
-            if(result == -1)
-                return BadRequest("Erro");
-            return result == 0 ? Ok("Post Curtido") : Ok("Post Descurtido");
+            await uow.PostRepository.Like(userId,id);
+            return Ok();
         }
     }
 }

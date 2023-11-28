@@ -7,6 +7,6 @@ namespace LeitourApi.Models;
 
 public class BaseModel 
 {
+    [Column("data_criacao", TypeName = "date")]
     public DateTime CreatedDate { get; set; }
-    public DateTime? AlteratedDate { get; set; }
 }

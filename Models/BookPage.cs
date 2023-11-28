@@ -16,7 +16,7 @@ public partial class BookPage
     [Key]
     public int PageId { get; set; }
 
-    public BookPage() { }
+
     public BookPage(string bookKey, int pageId)
     {
         this.BookKey = bookKey;

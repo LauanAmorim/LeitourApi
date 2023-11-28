@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace LeitourApi.Models;
 
 [Table("tbl_usuario")]
-public class User
+public class User : BaseModel
 {
     [Key]
     [Column("pk_usuario_id",TypeName = "int")]
@@ -28,7 +28,4 @@ public class User
 
     [Column("usuario_acesso", TypeName="Enum")]
     public string Access {get; set;} = null!;
-
-    [Column("usuario_data_cadastro", TypeName="Datetime")]
-    public DateTime CreatedDate {get; set;}
 }

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LeitourApi.Models
 {
     [Table("tbl_livro_salvo")]
-    public class SavedBook
+    public class SavedBook : BaseModel
     {
 
         [Key]

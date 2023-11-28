@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LeitourApi.Models;
 
 [Table("tbl_anotacao")]
-public class Annotation
+public class Annotation : BaseModel
 {
     [Key]
     [Column("pk_anotacao_id")]
@@ -14,11 +14,8 @@ public class Annotation
     public int SavedBookId { get; set; }
     [Column("anotacao_texto")]
     public string AnnotationText { get; set; } = null!;
-    
-    [Column("anotacao_data_criacao")]
-    public DateTime CreatedDate { get; set; }
-    [Column("anotacao_data_alteracao")]
-    public DateTime AlteratedDate { get; set; }
+    [Column("data_alteracao", TypeName = "date")]
+    public DateTime? AlteratedDate { get; set; }
 
 
 }

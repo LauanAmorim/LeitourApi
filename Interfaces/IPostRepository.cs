@@ -5,6 +5,6 @@ using LeitourApi.Models;
 public interface IPostRepository : IRepository<Post>
 {
   new Task<Post?> GetById(int id);
-  new Task<List<Post>?> GetAll(int id);
-  public Task<int> Like(int userId, int postId);
+  Task<List<Post>?> GetAll(int offset, int id);
+  public Task Like(int userId, int postId);
 }

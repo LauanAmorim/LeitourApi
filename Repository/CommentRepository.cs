@@ -19,8 +19,8 @@ public class CommentRepository : Repository<Comment>, ICommentRepository
     
      
     public override async Task<Comment?> GetById(int id) => 
-        await dbSet.FindAsync(id);//().FromSql($"SELECT * {POST_VIEW_GET_POST} where pk_publicacao_id = {id}").FirstOrDefaultAsync();
+        await dbSet.FindAsync(id);
 
     public override async Task<List<Comment>?> GetAll(int offset) => 
-        await dbSet.ToListAsync();//.FromSql($"SELECT * from {POST_VIEW_GET_POST}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
+        await dbSet.Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
 }

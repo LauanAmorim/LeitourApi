@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using LeitourApi.Models;
 namespace LeitourApi.Interfaces;
-public interface IRepository<T> where T : class{
+public interface IRepository<T> where T : BaseModel{
         Task<T?> GetById(int id);
         Task<List<T>?> GetAll();
         Task<List<T>?> GetAll(int offset);

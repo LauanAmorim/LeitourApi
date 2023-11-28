@@ -9,6 +9,7 @@ public class PostRepository : Repository<Post>, IPostRepository
 {
     private LeitourContext _context;
     readonly DbSet<Post> dbSet;
+  
     public const string VIEW_POST = "vw_publicacao";
     
      public PostRepository(LeitourContext context) : base(context)
@@ -18,19 +19,12 @@ public class PostRepository : Repository<Post>, IPostRepository
     }
      
     public override async Task<Post?> GetById(int id) => 
-        await dbSet.FindAsync(id);//().FromSql($"SELECT * {POST_VIEW_GET_POST} where pk_publicacao_id = {id}").FirstOrDefaultAsync();
+        await dbSet.FindAsync(id);
 
-    public override async Task<List<Post>?> GetAll(int offset) => 
-        await dbSet.ToListAsync();//.FromSql($"SELECT * from {POST_VIEW_GET_POST}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
+    public async Task<List<Post>?> GetAll(int offset, int id){
+        return await dbSet.FromSqlInterpolated($"call sp_select_publicacao({id})").ToListAsync();//.Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
+}
 
-    public async Task<int> Like(int userId, int postId){
-       /* string query ="call sp_like(@vId,@vPublicacao)";
-        MySqlCommand myCommand = new(query);
-        myCommand.
-        myCommand.Parameters.Add("@vId", (System.Data.DbType)userId);
-        myCommand.Parameters.Add("@vPublicacao ",postId );
-        await myCommand.ExecuteNonQueryAsync();*/
-       await dbSet.FromSql($"call sp_like({userId},{postId})'").SingleAsync();
-       return 0;
-       }
+    public async Task Like(int userId, int postId) => await _context.Database.ExecuteSqlInterpolatedAsync($"call sp_like({userId},{postId},@vSucesso)");
+
 }

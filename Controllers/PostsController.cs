@@ -5,6 +5,8 @@ using LeitourApi.Interfaces;
 using System.Threading.Tasks;
 using LeitourApi.Data;
 using LeitourApi.Services;
+using NuGet.Common;
+using System.ComponentModel;
 
 namespace LeitourApi.Controllers
 {
@@ -25,9 +27,16 @@ namespace LeitourApi.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<Post>>> GetPosts([FromQuery(Name = offset)] int page)
+        public async Task<ActionResult<List<Post>>> GetPosts([FromHeader] string? token,[FromQuery(Name = offset)] int page)
         {
-            var posts = await uow.PostRepository.GetAll(page);
+            int id = -1;
+            if(token != null)
+                id = TokenService.DecodeToken(token);
+            List<Post>? posts;
+            if(id == -1)
+                posts = await uow.PostRepository.GetAll(page);
+            else
+                posts = await uow.PostRepository.GetAll(page,id);
             return posts != null ? posts : _message.MsgNotFound();
         }
 

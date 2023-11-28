@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LeitourApi.Models;
 
 [Table("tbl_publicacao")]
-public class Post
+public class Post : BaseModel
 {
 
     [Key]
@@ -25,16 +25,13 @@ public class Post
     [Column("likes")]
     public int Likes { get; }
 
+    [Column("liked")]
+    public bool Liked { get; }
+
 
     [Column("num_comentario")]
     public int Comment_Number { get; }
-
-    [Column("publicacao_data_criacao",TypeName = "date")]
-    public required DateTime CreatedDate { get; set; }
     
-    [Column("publicacao_data_alteracao",TypeName = "date")]
+    [Column("data_alteracao", TypeName = "date")]
     public DateTime? AlteratedDate { get; set; }
-
-    
-
 }

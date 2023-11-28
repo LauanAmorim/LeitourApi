@@ -5,7 +5,7 @@ using LeitourApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<T> : IRepository<T> where T : BaseModel
 {
     private LeitourContext _context;
     readonly DbSet<T> dbSet;
@@ -21,7 +21,7 @@ public class Repository<T> : IRepository<T> where T : class
 
     public virtual async Task<List<T>?> GetAll() => await GetAll(0);
     
-    public virtual async Task<List<T>?> GetAll(int offset) => await dbSet.Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
+    public virtual async Task<List<T>?> GetAll(int offset) => await dbSet.OrderByDescending(t => t.CreatedDate).Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
     public async Task<T?> GetByCondition(Expression<Func<T, bool>> predicate) =>
        await dbSet.Where(predicate).FirstOrDefaultAsync();
 
@@ -29,7 +29,7 @@ public class Repository<T> : IRepository<T> where T : class
         await GetAllByCondition(predicate,0);
 
     public async Task<List<T>?> GetAllByCondition(Expression<Func<T, bool>> predicate, int offset) =>
-        await dbSet.Where(predicate).Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
+        await dbSet.OrderByDescending(t => t.CreatedDate).Where(predicate).Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
 
 
     public void Add(T entity)
@@ -40,7 +40,6 @@ public class Repository<T> : IRepository<T> where T : class
 
     public void Update(T entity)
     {
-        //dbSet.Update(entity);
         _context.Entry(entity).State = EntityState.Modified;
         _context.SaveChanges();
     }
@@ -57,11 +56,11 @@ public class Repository<T> : IRepository<T> where T : class
         return user == null || user.Access == "Desativado";
     }
     public int Count() => dbSet.Count();
-
-    public async Task<T?> GetFromProcedure(string procedure, string param) => await dbSet.FromSql($"EXECUTE {procedure} {param}").FirstOrDefaultAsync();
-    public async Task<T?> GetFromProcedure(string procedure) => await dbSet.FromSql($"EXECUTE {procedure}").FirstOrDefaultAsync();
-    public async Task<List<T>> GetAllFromProcedure(string procedure,int offset) => await dbSet.FromSql($"EXECUTE {procedure}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
-    public async Task<List<T>> GetAllFromProcedure(string procedure, string param,int offset) => await dbSet.FromSql($"EXECUTE {procedure} {param}").Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
+  
+    public async Task<T?> GetFromProcedure(string procedure, string param) => await dbSet.FromSql($"EXECUTE {procedure} {param}").OrderByDescending(t => t.CreatedDate).FirstOrDefaultAsync();
+    public async Task<T?> GetFromProcedure(string procedure) => await dbSet.FromSql($"EXECUTE {procedure}").OrderByDescending(t => t.CreatedDate).FirstOrDefaultAsync();
+    public async Task<List<T>> GetAllFromProcedure(string procedure,int offset) => await GetAllFromProcedure(procedure,"",0);
+    public async Task<List<T>> GetAllFromProcedure(string procedure, string param,int offset) => await dbSet.FromSql($"EXECUTE {procedure} {param}").OrderByDescending(t => t.CreatedDate).Skip(offset).Take(Constants.LIMIT_VALUE).ToListAsync();
 
     public async Task<List<T>?> GetAllWithJoin(Expression<Func<T, object>> join) =>
         await dbSet.Include(join).ToListAsync();

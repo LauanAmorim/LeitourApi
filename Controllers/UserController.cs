@@ -87,12 +87,25 @@ public class UserController : ControllerBase
         User? user = await uow.UserRepository.GetByEmail(email);
         return (user != null) ? user : message.MsgNotFound();
     }
+    [HttpGet("username/{username}")]
+    public async Task<ActionResult<List<User>>> GetUserByUsername([FromQuery(Name = Constants.OFFSET)] int page, string username)
+    {
+        List<User>? user = await uow.UserRepository.GetByUsername(page,username);
+        return (user != null) ? user : message.MsgNotFound();
+    }
 
     [HttpPut("alter")]
-    public async Task<IActionResult> PutUser([FromHeader] string token, [FromBody] User user)
+    public async Task<IActionResult> PutUser([FromHeader] string token, [FromBody] User updatedUser)
     {
-        
-        uow.UserRepository.Update(user);
+        int id = TokenService.DecodeToken(token);
+        var user = await uow.UserRepository.GetUser(id);
+        if (user == null)
+            return message.MsgNotFound();
+        if (await uow.UserRepository.IsDeactivated(id))
+            return message.MsgDeactivate();
+        if (updatedUser.Id != id)
+            return message.MsgInvalid();
+        uow.UserRepository.Update(updatedUser);
         return message.MsgAlterated();
     }
 
