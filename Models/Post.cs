@@ -16,6 +16,10 @@ public class Post : BaseModel
 
     [Column("usuario_nome")]
     public string? UserName { get; }
+
+    [Column("usuario_email")]
+    public string? Email { get; }
+
     [Column("usuario_foto")]
     public string? UserPhoto { get; }
 

@@ -176,7 +176,7 @@ delimiter ;
 delimiter //
 create procedure sp_select_publicacao(in vIdUsuario int, in vLimite int, in vOffset int)
 begin
-SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_foto_perfil as "usuario_foto",
+SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.email_nome,tbl_usuario.usuario_foto_perfil as "usuario_foto",
 	(SELECT COUNT(*) FROM tbl_comentario
         WHERE fk_publicacao_id = pk_publicacao_id) as num_comentario,
     (SELECT COUNT(*) FROM tbl_like
