@@ -34,6 +34,7 @@ public class Repository<T> : IRepository<T> where T : BaseModel
 
     public void Add(T entity)
     {
+        entity.CreatedDate = DateTime.UtcNow;
         _context.Add(entity);
         _context.SaveChanges();
     }
@@ -56,6 +57,8 @@ public class Repository<T> : IRepository<T> where T : BaseModel
         return user == null || user.Access == "Desativado";
     }
     public int Count() => dbSet.Count();
+
+    public int CountByCondition(Expression<Func<T, bool>> predicate) => dbSet.Where(predicate).ToList().Count;
   
     public async Task<T?> GetFromProcedure(string procedure, string param) => await dbSet.FromSql($"EXECUTE {procedure} {param}").OrderByDescending(t => t.CreatedDate).FirstOrDefaultAsync();
     public async Task<T?> GetFromProcedure(string procedure) => await dbSet.FromSql($"EXECUTE {procedure}").OrderByDescending(t => t.CreatedDate).FirstOrDefaultAsync();

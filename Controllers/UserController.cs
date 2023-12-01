@@ -87,6 +87,21 @@ public class UserController : ControllerBase
         User? user = await uow.UserRepository.GetByEmail(email);
         return (user != null) ? user : message.MsgNotFound();
     }
+
+    [HttpGet("userStatistics/{email}")]
+    public async Task<ActionResult<int[]>> GetUserStatisticsByEmail(string email)
+    {
+        User? user = await uow.UserRepository.GetByEmail(email);
+        if(user == null)
+            return new int[]{0,0,0,0};
+        int id = user.Id;
+        int savedBooks = uow.SavedRepository.CountByCondition(s => s.UserId == id);
+        int posts = uow.PostRepository.CountByCondition(s => s.UserId == id);
+        int following = (await uow.UserRepository.GetFollowing(email)).Count;
+        int followers = (await uow.UserRepository.GetFollowers(id)).Count;
+        return new int[]{id,savedBooks,following,followers};
+    }
+
     [HttpGet("username/{username}")]
     public async Task<ActionResult<List<User>>> GetUserByUsername([FromQuery(Name = Constants.OFFSET)] int page, string username)
     {

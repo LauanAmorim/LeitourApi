@@ -174,7 +174,7 @@ SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_foto_perfil
 delimiter ;
 
 delimiter //
-create procedure sp_select_publicacao(in vIdUsuario int)
+create procedure sp_select_publicacao(in vIdUsuario int, in vLimite int, in vOffset int)
 begin
 SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_foto_perfil as "usuario_foto",
 	(SELECT COUNT(*) FROM tbl_comentario
@@ -184,7 +184,7 @@ SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_foto_perfil
         (select count(*) from tbl_like where fk_usuario_id = pk_usuario_id and fk_publicacao_id = vIdUsuario) as "liked"
     FROM tbl_publicacao
     Inner JOIN tbl_usuario on pk_usuario_id
-    where tbl_usuario.pk_usuario_id = tbl_publicacao.fk_usuario_id;
+    where tbl_usuario.pk_usuario_id = tbl_publicacao.fk_usuario_id order by data_criacao desc limit vLimite offset vOffset;
 end //
 delimiter ;
 
@@ -206,3 +206,12 @@ begin
 	select * from tbl_usuario where pk_usuario_id = vIdUser;
 end $$
 delimiter ;
+
+create function usuarioId() returns INTEGER DETERMINISTIC NO SQL return @p1;
+
+create view vw_usuario_estatisticas as
+SELECT (select count(*) from tbl_livro_salvo where fk_usuario_id = usuarioId()) as 'Livros salvos',
+	(select count(*) from tbl_publicacao where fk_usuario_id = usuarioId()) as 'Posts',
+    (select count(*) from tbl_seguidor where fk_usuario_id = usuarioId()) as 'Seguindo',
+    (select count(*) from tbl_seguidor where fk_usuario_email = (select usuario_email from tbl_usuario where pk_usuario_id = usuarioId())) as 'Seguidores';
+

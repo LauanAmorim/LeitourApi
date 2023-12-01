@@ -19,4 +19,5 @@ public interface IRepository<T> where T : BaseModel{
         void Delete(T entity);
         Task<bool> IsDeactivated(int id);
         int Count();
+        int CountByCondition(Expression<Func<T, bool>> predicate);
 }
