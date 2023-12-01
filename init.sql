@@ -153,7 +153,7 @@ DELIMITER ;
  -- selecionar a publicação e o nome do usuario
  delimiter //
 create view vw_comentario as
-SELECT tbl_comentario.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_foto_perfil as "usuario_foto"
+SELECT tbl_comentario.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_email,tbl_usuario.usuario_foto_perfil as "usuario_foto"
     FROM tbl_comentario
 	Inner JOIN tbl_usuario on pk_usuario_id
     where tbl_usuario.pk_usuario_id = tbl_comentario.fk_usuario_id;
@@ -162,7 +162,7 @@ delimiter ;
     
 delimiter //
 create view vw_publicacao as
-SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_foto_perfil as "usuario_foto",
+SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_email,tbl_usuario.usuario_foto_perfil as "usuario_foto",
 	(SELECT COUNT(*) FROM tbl_comentario
         WHERE fk_publicacao_id = pk_publicacao_id) as num_comentario,
     (SELECT COUNT(*) FROM tbl_like
