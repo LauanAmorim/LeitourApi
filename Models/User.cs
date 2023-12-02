@@ -22,6 +22,9 @@ public class User : BaseModel
     [Column("usuario_senha",TypeName = "varchar(64)")]
     [Required]
     public required string Password { get; set; } = null!;
+    
+    [Column("usuario_biografia",TypeName = "varchar(300)")]
+    public string? BioUser { get; set;}
 
     [Column("usuario_foto_perfil")]
     public string? ProfilePhoto { get; set; }

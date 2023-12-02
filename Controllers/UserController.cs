@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Data;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace LeitourApi.Controllers;
@@ -92,20 +93,20 @@ public class UserController : ControllerBase
     public async Task<ActionResult<int[]>> GetUserStatisticsByEmail(string email)
     {
         User? user = await uow.UserRepository.GetByEmail(email);
-        if(user == null)
-            return new int[]{0,0,0,0};
+        if (user == null)
+            return new int[] { 0, 0, 0, 0 };
         int id = user.Id;
         int savedBooks = uow.SavedRepository.CountByCondition(s => s.UserId == id);
         int posts = uow.PostRepository.CountByCondition(s => s.UserId == id);
         int following = (await uow.UserRepository.GetFollowing(email)).Count;
         int followers = (await uow.UserRepository.GetFollowers(id)).Count;
-        return new int[]{id,savedBooks,following,followers};
+        return new int[] { id, savedBooks, following, followers };
     }
 
     [HttpGet("username/{username}")]
     public async Task<ActionResult<List<User>>> GetUserByUsername([FromQuery(Name = Constants.OFFSET)] int page, string username)
     {
-        List<User>? user = await uow.UserRepository.GetByUsername(page,username);
+        List<User>? user = await uow.UserRepository.GetByUsername(page, username);
         return (user != null) ? user : message.MsgNotFound();
     }
 
@@ -124,8 +125,8 @@ public class UserController : ControllerBase
         return message.MsgAlterated();
     }
 
-    [HttpPut("uploadImage")]
-    public async Task<IActionResult> SendImage([FromHeader] string token, IFormFile file)
+    [HttpPost("uploadImage")]
+    public async Task<ActionResult<dynamic>> SendImage([FromHeader] string token, IFormFile file)
     {
         int id = TokenService.DecodeToken(token);
         var user = await uow.UserRepository.GetUser(id);
@@ -134,20 +135,27 @@ public class UserController : ControllerBase
         if (await uow.UserRepository.IsDeactivated(id))
             return message.MsgDeactivate();
 
-        if (file !=null && file.Length > 0)
+        if (file != null && file.Length > 0)
         {
             try
-            {  
+            {
                 string folder = Regex.Replace(user.Email, @"(\s+|@|&|,|\.|,|´|\[|\]|\{|\}|\:|~|\\|\/|\*|'|\(|\)|<|>|#)", "$");
                 string PATH = $"Images/Users/{folder}";
-                if(System.IO.File.Exists(user.ProfilePhoto))
+                if (System.IO.File.Exists(user.ProfilePhoto))
                     System.IO.File.Delete(user.ProfilePhoto);
                 if (!Directory.Exists(PATH))
                     Directory.CreateDirectory(PATH);
-                string FILE = PATH+"/"+file.FileName;
+                string FILE = PATH + "/" + file.FileName;
+
+                byte[] bytes = Convert.FromBase64String(file.ToString());
+                
                 FileStream filestream = System.IO.File.Create(FILE);
-                await file.CopyToAsync(filestream);
-                filestream.Flush();
+              //  System.IO.File.WriteAllBytes(FILE, bytes);
+
+
+               await file.CopyToAsync(filestream);
+               filestream.Flush();
+
                 user.ProfilePhoto = FILE;
                 uow.UserRepository.Update(user);
                 return Ok("A foto foi atualizada");

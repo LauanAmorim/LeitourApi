@@ -10,7 +10,8 @@ CREATE TABLE tbl_usuario (
     usuario_senha VARCHAR(64) not null,
     usuario_acesso ENUM('Admin', 'Comum','Premium','Desativado') not null default 'Comum',
     data_criacao DATETIME default current_timestamp,
-    usuario_foto_perfil varchar(256)
+    usuario_foto_perfil varchar(256),
+    usuario_biografia varchar(300)
 );
 
 -- Tabela publicacao
@@ -44,15 +45,15 @@ create table tbl_livro_salvo(
     livro_salvo_publico tinyint not null default 0,
     livro_salvo_capa varchar(120) not null,
     data_criacao DATETIME not null default current_timestamp,
-    livro_salvo_titulo varchar(255) not null
-
+    livro_salvo_titulo varchar(255) not null,
+    livro_salvo_autor varchar(255) not null
 );
 
 -- Tabela anotacao
 CREATE TABLE tbl_anotacao (
     pk_anotacao_id INT AUTO_INCREMENT PRIMARY KEY,
     fk_livro_salvo_id INT not null,
-    anotacao_texto VARCHAR(250) not null,
+    anotacao_texto VARCHAR(500) not null,
     data_criacao DATETIME default current_timestamp,
     data_alteracao date,
     FOREIGN KEY (fk_livro_salvo_id) REFERENCES tbl_livro_salvo(pk_livro_salvo_id)
@@ -177,7 +178,7 @@ delimiter ;
 delimiter //
 create procedure sp_select_publicacao(in vIdUsuario int, in vLimite int, in vOffset int)
 begin
-SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.email_nome,tbl_usuario.usuario_foto_perfil as "usuario_foto",
+SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_email,tbl_usuario.usuario_foto_perfil as "usuario_foto",
 	(SELECT COUNT(*) FROM tbl_comentario
         WHERE fk_publicacao_id = pk_publicacao_id) as num_comentario,
     (SELECT COUNT(*) FROM tbl_like
@@ -192,7 +193,7 @@ delimiter ;
 
 delimiter //
 create view vw_usuario as
-SELECT pk_usuario_id,usuario_nome,usuario_email,"" as usuario_senha,"" as usuario_acesso,data_criacao,usuario_foto_perfil FROM tbl_usuario;
+SELECT pk_usuario_id,usuario_nome,usuario_email,"" as usuario_senha,"" as usuario_acesso,data_criacao,usuario_foto_perfil,usuario_biografia FROM tbl_usuario;
 //
 delimiter ;
 
@@ -216,3 +217,7 @@ SELECT (select count(*) from tbl_livro_salvo where fk_usuario_id = usuarioId()) 
     (select count(*) from tbl_seguidor where fk_usuario_id = usuarioId()) as 'Seguindo',
     (select count(*) from tbl_seguidor where fk_usuario_email = (select usuario_email from tbl_usuario where pk_usuario_id = usuarioId())) as 'Seguidores';
 
+
+
+select * from vw_publicacao;
+call sp_select_publicacao(1,20,0);

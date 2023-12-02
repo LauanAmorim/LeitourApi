@@ -28,6 +28,8 @@ namespace LeitourApi.Models
 
         [Column("livro_salvo_titulo")]
         public string BookTitle { get; set; } = null!;
+        [Column("livro_salvo_autor")]
+        public string BookAuthor { get; set; } = null!;
     
     }
 }
