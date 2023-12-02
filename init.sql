@@ -43,6 +43,7 @@ create table tbl_livro_salvo(
     livro_salvo_chave_livro varchar(25) not null,
     livro_salvo_publico tinyint not null default 0,
     livro_salvo_capa varchar(120) not null,
+    data_criacao DATETIME not null default current_timestamp,
     livro_salvo_titulo varchar(255) not null
 
 );
@@ -164,9 +165,9 @@ delimiter //
 create view vw_publicacao as
 SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_email,tbl_usuario.usuario_foto_perfil as "usuario_foto",
 	(SELECT COUNT(*) FROM tbl_comentario
-        WHERE fk_publicacao_id = pk_publicacao_id) as num_comentario,
+        WHERE fk_publicacao_id = pk_publicacao_id) as 'num_comentario',
     (SELECT COUNT(*) FROM tbl_like
-        WHERE fk_publicacao_id = pk_publicacao_id) as likes, (select false) as "liked"
+        WHERE fk_publicacao_id = pk_publicacao_id) as 'likes', (select false) as "liked"
     FROM tbl_publicacao
     Inner JOIN tbl_usuario on pk_usuario_id
     where tbl_usuario.pk_usuario_id = tbl_publicacao.fk_usuario_id;
