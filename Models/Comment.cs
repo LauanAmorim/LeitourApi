@@ -16,11 +16,13 @@ public class Comment : BaseModel
     [Column("fk_usuario_id", TypeName = "int")]
     public required int UserId { get; set; }
 
-
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     [Column("usuario_nome")]
     public string? UserName { get; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
      [Column("usuario_email")]
     public string? Email { get; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     [Column("usuario_foto")]
     public string? UserPhoto { get; }
 

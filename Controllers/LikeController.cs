@@ -35,8 +35,8 @@ namespace LeitourApi.Controllers
             Post? post = await uow.PostRepository.GetById(id);
             if(post == null)
                 return _message.MsgNotFound();
-            await uow.PostRepository.Like(userId,id);
-            return Ok();
+            int sucess = await uow.PostRepository.Like(userId,id);
+            return Ok(sucess);
         }
     }
 }

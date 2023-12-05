@@ -117,7 +117,7 @@ public class SavedBooksController : ControllerBase
         return message.MsgPublic(saved.Public);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{savedId}")]
     public async Task<IActionResult> DeleteSaved([FromHeader] string token, int savedId)
     {
         int id = TokenService.DecodeToken(token);

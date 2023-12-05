@@ -73,6 +73,7 @@ public class BookApiRepository
                 {
                     book.Category = null;
                 }
+                try{
                 JObject[] jsonArray = jsonInfo["industryIdentifiers"].ValueAsArray<JObject>();
                 foreach (JObject jObj in jsonArray)
                 {
@@ -81,6 +82,7 @@ public class BookApiRepository
                     else if (jObj["type"].ToString() == "ISBN_13")
                         book.ISBN_13 = GetStringValue(jObj, "identifier");
                 }
+                }catch{}
                 Books.Add(book);
             }
         }

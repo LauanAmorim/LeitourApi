@@ -180,9 +180,9 @@ create procedure sp_select_publicacao(in vIdUsuario int, in vLimite int, in vOff
 begin
 SELECT tbl_publicacao.*,tbl_usuario.usuario_nome,tbl_usuario.usuario_email,tbl_usuario.usuario_foto_perfil as "usuario_foto",
 	(SELECT COUNT(*) FROM tbl_comentario
-        WHERE fk_publicacao_id = pk_publicacao_id) as num_comentario,
+        WHERE fk_publicacao_id = pk_publicacao_id) as 'num_comentario',
     (SELECT COUNT(*) FROM tbl_like
-        WHERE fk_publicacao_id = pk_publicacao_id) as likes,
+        WHERE fk_publicacao_id = pk_publicacao_id) as 'likes',
         (select count(*) from tbl_like where fk_usuario_id = pk_usuario_id and fk_publicacao_id = vIdUsuario) as "liked"
     FROM tbl_publicacao
     Inner JOIN tbl_usuario on pk_usuario_id

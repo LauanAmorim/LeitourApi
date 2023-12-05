@@ -22,8 +22,8 @@ namespace LeitourApi.Controllers
     {
 
       
-       // private static string API_PARAMS = "&maxResults=20&key=AIzaSyAz_H70Ju10k16gGDt-V-wQnYll-q7q7LY&startIndex=";
-        private static string API_PARAMS = "&maxResults=20&startIndex=";
+        private static string API_PARAMS = "&maxResults=20&key=AIzaSyAz_H70Ju10k16gGDt-V-wQnYll-q7q7LY&startIndex=";
+        //private static string API_PARAMS = "&maxResults=20&startIndex=";
         private static string API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
         public readonly BookApiRepository _bookApi;
@@ -35,9 +35,9 @@ namespace LeitourApi.Controllers
         }
 
         [HttpGet("Title/{title}")]
-        public async Task<ActionResult<IEnumerable<BookApi>?>> GetByTitle(string title,[FromQuery(Name = Constants.OFFSET)] int page)
+        public async Task<ActionResult<IEnumerable<BookApi>?>> GetByTitle(string title,[FromQuery(Name = Constants.OFFSET)] int offset)
         {
-            Uri url = new($"{API_URL}intitle:{title}{API_PARAMS}{page}");
+            Uri url = new($"{API_URL}intitle:{title}{API_PARAMS}{offset}");
             JObject response = await _bookApi.HttpGet(url);
             if((int?) response["Code"] == StatusCodes.Status500InternalServerError)
                 return mesage.MsgNotReturned();

@@ -100,7 +100,7 @@ public class UserController : ControllerBase
         int posts = uow.PostRepository.CountByCondition(s => s.UserId == id);
         int following = (await uow.UserRepository.GetFollowing(email)).Count;
         int followers = (await uow.UserRepository.GetFollowers(id)).Count;
-        return new int[] { id, savedBooks, following, followers };
+        return new int[] { posts, savedBooks, following, followers };
     }
 
     [HttpGet("username/{username}")]
