@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using LeitourApi.Models;
 using Microsoft.EntityFrameworkCore.Metadata;
+
 namespace LeitourApi.Data
 {
     public class LeitourContext : DbContext
@@ -19,25 +20,29 @@ namespace LeitourApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
-
- modelBuilder.Entity<Post>().Property(e => e.UserName)
-            .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+            modelBuilder.Entity<Post>().Property(e => e.UserName)
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
             modelBuilder.Entity<Post>().Property(e => e.UserName)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
-                modelBuilder.Entity<Post>().Property(e => e.Email)
-            .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+            modelBuilder.Entity<Post>().Property(e => e.Email)
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
             modelBuilder.Entity<Post>().Property(e => e.Email)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
             modelBuilder.Entity<Post>().Property(e => e.Likes)
-            .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
             modelBuilder.Entity<Post>().Property(e => e.Likes)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
-            
+
             modelBuilder.Entity<Post>().Property(e => e.Liked)
-            .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
             modelBuilder.Entity<Post>().Property(e => e.Liked)
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+
+            modelBuilder.Entity<Post>().Property(e => e.Comment_Number)
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+            modelBuilder.Entity<Post>().Property(e => e.Comment_Number)
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
             modelBuilder
@@ -54,6 +59,16 @@ namespace LeitourApi.Data
                 .Entity<User>()
                 .ToView(UserRepository.VIEW_USER)
                 .HasKey(t => t.Id);
+
+            modelBuilder.Entity<Comment>().Property(e => e.UserName)
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+            modelBuilder.Entity<Comment>().Property(e => e.UserName)
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+
+            modelBuilder.Entity<Comment>().Property(e => e.Email)
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+            modelBuilder.Entity<Comment>().Property(e => e.Email)
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
         }
     }
 }
