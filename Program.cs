@@ -3,6 +3,7 @@ using LeitourApi.Models;
 using LeitourApi.Repository;
 using Microsoft.EntityFrameworkCore;
 using LeitourApi.Data;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,24 @@ app.UseCors(builder =>
            .AllowAnyHeader()
            .AllowAnyMethod();
 });
+
+
+app.UseStaticFiles();// For the wwwroot folder
+
+app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+            RequestPath = "/Images"
+        });
+//Enable directory browsing
+app.UseDirectoryBrowser(new DirectoryBrowserOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+            RequestPath = "/Images"
+        });
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

@@ -141,21 +141,58 @@ public class UserController : ControllerBase
             {
                 string folder = Regex.Replace(user.Email, @"(\s+|@|&|,|\.|,|´|\[|\]|\{|\}|\:|~|\\|\/|\*|'|\(|\)|<|>|#)", "$");
                 string PATH = $"Images/Users/{folder}";
-                if (System.IO.File.Exists(user.ProfilePhoto))
+                 if(System.IO.File.Exists(user.ProfilePhoto))
                     System.IO.File.Delete(user.ProfilePhoto);
                 if (!Directory.Exists(PATH))
                     Directory.CreateDirectory(PATH);
-                string FILE = PATH + "/" + file.FileName;
-
-                byte[] bytes = Convert.FromBase64String(file.ToString());
-                
+                string FILE = PATH+"/"+file.FileName;
                 FileStream filestream = System.IO.File.Create(FILE);
-              //  System.IO.File.WriteAllBytes(FILE, bytes);
+                await file.CopyToAsync(filestream);
+                filestream.Flush();
+                filestream.Close();
+                user.ProfilePhoto = FILE;
+                uow.UserRepository.Update(user);
+                return Ok("A foto foi atualizada");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("ferrou " + ex.ToString());
+            }
+        }
+        else
+        {
+            return BadRequest("Envie outra foto");
+        }
+    }
 
+   /* [HttpPost("uploadImage")]
+    public async Task<ActionResult<dynamic>> SendImage([FromHeader] string token, String file)
+    {
+        int id = TokenService.DecodeToken(token);
+        var user = await uow.UserRepository.GetUser(id);
+        if (user == null)
+            return message.MsgNotFound();
+        if (await uow.UserRepository.IsDeactivated(id))
+            return message.MsgDeactivate();
 
-               await file.CopyToAsync(filestream);
-               filestream.Flush();
-
+        if (file != null && file.Length > 0)
+        {
+            try
+            {
+                string folder = Regex.Replace(user.Email, @"(\s+|@|&|,|\.|,|´|\[|\]|\{|\}|\:|~|\\|\/|\*|'|\(|\)|<|>|#)", "$");
+                string PATH = $"Images/Users/{folder}";
+                 if(System.IO.File.Exists(user.ProfilePhoto))
+                    System.IO.File.Delete(user.ProfilePhoto);
+                if (!Directory.Exists(PATH))
+                    Directory.CreateDirectory(PATH);
+                string FILE = PATH+"/"+ "UserPhoto.jpeg";
+                var bytes = Convert.FromBase64String(file);
+                using var stream = new MemoryStream(bytes);
+                FormFile formFile = new(stream,0,stream.Length,"streamFile","UserPhoto.jpeg");
+                FileStream filestream = System.IO.File.Create(FILE);
+                await formFile.CopyToAsync(filestream);
+                filestream.Flush();
+                filestream.Close();
                 user.ProfilePhoto = FILE;
                 uow.UserRepository.Update(user);
                 return Ok("A foto foi atualizada");
@@ -170,7 +207,8 @@ public class UserController : ControllerBase
             return BadRequest("Envie outra foto");
         }
 
-    }
+
+    }*/
 
 
     [HttpDelete("deactivate")]
