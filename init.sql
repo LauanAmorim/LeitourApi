@@ -221,3 +221,5 @@ SELECT (select count(*) from tbl_livro_salvo where fk_usuario_id = usuarioId()) 
 
 select * from vw_publicacao;
 call sp_select_publicacao(1,20,0);
+
+

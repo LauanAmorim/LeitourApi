@@ -33,13 +33,13 @@ app.UseSwaggerUI();
 
 app.UseCors(builder =>
 {
-    builder.WithOrigins("http://localhost:44398/")
+    builder.AllowAnyOrigin()
            .AllowAnyHeader()
            .AllowAnyMethod();
 });
 
 
-app.UseStaticFiles();// For the wwwroot folder
+app.UseStaticFiles();
 
 app.UseStaticFiles(new StaticFileOptions
         {
