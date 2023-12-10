@@ -39,21 +39,22 @@ app.UseCors(builder =>
 });
 
 
-app.UseStaticFiles();
 
-app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "Images")),
-            RequestPath = "/Images"
-        });
-//Enable directory browsing
-app.UseDirectoryBrowser(new DirectoryBrowserOptions
-        {
-            FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "Images")),
-            RequestPath = "/Images"
-        });
+//app.UseStaticFiles();
+
+//app.UseStaticFiles(new StaticFileOptions
+//        {
+//            FileProvider = new PhysicalFileProvider(
+//                Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+//            RequestPath = "/Images"
+//        });
+
+//app.UseDirectoryBrowser(new DirectoryBrowserOptions
+//        {
+//            FileProvider = new PhysicalFileProvider(
+//                Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+//            RequestPath = "/Images"
+//        });
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
